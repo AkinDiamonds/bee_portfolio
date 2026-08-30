@@ -1,5 +1,6 @@
 import Navbar from "@/components/nav/Navbar";
 import Hero from "@/components/hero/Hero";
+import FeaturedProjects from "@/components/projects/FeaturedProjects";
 
 export default function Home() {
   return (
@@ -7,6 +8,7 @@ export default function Home() {
       <Navbar />
       <main className="flex-1 max-w-[var(--container-portfolio)] w-full mx-auto px-[var(--spacing-5)] md:px-[var(--spacing-8)]">
         <Hero />
+        <FeaturedProjects />
       </main>
     </div>
   );

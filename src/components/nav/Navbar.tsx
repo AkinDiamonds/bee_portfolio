@@ -2,62 +2,61 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import { ChevronDown, ExternalLink, Download, Copy, Check } from "lucide-react";
 
 interface ContactLink {
   label: string;
-  href: string;
+  href?: string;
   external?: boolean;
+  isDownload?: boolean;
+  isCopy?: boolean;
+  copyValue?: string;
 }
 
 const contactLinks: ContactLink[] = [
-  { label: "LinkedIn", href: "https://linkedin.com/in/TODO", external: true },
-  { label: "WhatsApp", href: "https://wa.me/TODO", external: true },
-  { label: "Email", href: "mailto:TODO@example.com" },
+  { label: "GitHub", href: "https://github.com/AkinDiamonds", external: true },
+  { label: "LinkedIn", href: "https://linkedin.com/in/simeon-akinrinola", external: true },
+  { label: "WhatsApp", href: "https://wa.me/+2349065979423", external: true },
+  { label: "Email", href: "mailto:simeonakinrinola7@gmail.com" },
   { label: "Schedule a meeting", href: "https://cal.com/TODO", external: true },
-  { label: "Phone", href: "tel:+1TODO" },
-  { label: "Download Résumé", href: "/resume.pdf", external: true },
+  { label: "Phone", isCopy: true, copyValue: "+2349065979423" },
+  { label: "Download Resume", href: "/resume.pdf", isDownload: true },
 ];
 
 export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const [copied, setCopied] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileContactOpen, setMobileContactOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  const handleCopy = (value: string) => {
+    navigator.clipboard.writeText(value);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  // Lock body scroll when mobile drawer is active
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-      }
+    if (mobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
     }
-
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") {
-        setIsOpen(false);
-        setMobileMenuOpen(false);
-      }
-    }
-
-    document.addEventListener("mousedown", handleClickOutside);
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
+  }, [mobileMenuOpen]);
 
   return (
-    <header className="w-full bg-[var(--color-background-default)]">
+    <header className="w-full bg-[var(--color-background-default)] sticky top-0 z-40">
       <div className="max-w-[var(--container-portfolio)] mx-auto px-[var(--spacing-5)] md:px-[var(--spacing-8)] py-[var(--spacing-5)] flex items-center justify-between">
-        {/* Left: Name / Logo */}
+        
+        {/* Brand */}
         <Link
           href="/"
-          className="text-[length:var(--text-heading-h4)] leading-[var(--text-heading-h4--line-height)] font-[number:var(--font-weight-semibold)] text-[var(--color-text-primary)] tracking-[var(--tracking-tight-heading)] focus-visible:outline-2 focus-visible:outline-[var(--color-text-primary)] rounded-[var(--radius-sm)] transition-opacity hover:opacity-80"
+          onClick={() => setMobileMenuOpen(false)}
+          className="text-[16px] font-[number:var(--font-weight-bold)] text-[var(--color-text-primary)] tracking-[var(--tracking-tight-heading)] rounded-[var(--radius-sm)] transition-opacity hover:opacity-80 z-50"
           aria-label="Home"
         >
-          TODO: Name
+          Simeon <span className="font-normal opacity-80">Akinrinola</span>
         </Link>
 
         {/* Desktop Nav */}
@@ -67,70 +66,87 @@ export default function Navbar() {
         >
           <Link
             href="/blog"
-            className="text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] focus-visible:outline-2 focus-visible:outline-[var(--color-text-primary)] rounded-[var(--radius-sm)] transition-colors py-[var(--spacing-2)] px-[var(--spacing-3)]"
+            className="text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors py-[var(--spacing-2)] px-[var(--spacing-3)]"
           >
             Blog
           </Link>
 
-          {/* Contact Dropdown */}
-          <div className="relative" ref={dropdownRef}>
+          {/* Contact Flyout */}
+          <div
+            className="relative"
+            ref={dropdownRef}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+          >
             <button
               type="button"
-              onClick={() => setIsOpen(!isOpen)}
-              aria-expanded={isOpen}
-              aria-haspopup="true"
-              aria-controls="contact-menu"
-              className="inline-flex items-center gap-[var(--spacing-2)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] focus-visible:outline-2 focus-visible:outline-[var(--color-text-primary)] rounded-[var(--radius-sm)] transition-colors py-[var(--spacing-2)] px-[var(--spacing-3)] cursor-pointer"
+              aria-expanded={isHovered}
+              className="inline-flex items-center gap-1.5 text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors py-[var(--spacing-2)] px-[var(--spacing-3)] cursor-pointer"
             >
               <span>Contact</span>
-              <svg
-                aria-hidden="true"
-                className={`w-4 h-4 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-              </svg>
+              <ChevronDown
+                className={`w-3.5 h-3.5`}
+              />
             </button>
 
-            {isOpen && (
-              <ul
-                id="contact-menu"
-                role="menu"
-                className="absolute right-0 mt-[var(--spacing-2)] w-56 bg-[var(--color-neutral-0)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] shadow-lg py-[var(--spacing-2)] z-50 focus:outline-none"
-              >
-                {contactLinks.map((item) => (
-                  <li key={item.label} role="none">
-                    <a
-                      role="menuitem"
-                      href={item.href}
-                      target={item.external ? "_blank" : undefined}
-                      rel={item.external ? "noopener noreferrer" : undefined}
-                      onClick={() => setIsOpen(false)}
-                      className="block px-[var(--spacing-4)] py-[var(--spacing-2)] text-[length:var(--text-label)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-neutral-50)] focus-visible:bg-[var(--color-neutral-50)] focus-visible:outline-none transition-colors"
-                    >
-                      {item.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
+            {isHovered && (
+              <div className="absolute right-0 top-full pt-1 w-52 z-50">
+                <ul
+                  role="menu"
+                  className="bg-[var(--color-background-default)] border border-[var(--color-border-default)] shadow-sm py-2 overflow-hidden"
+                >
+                  {contactLinks.map((item) => (
+                    <li key={item.label} role="none">
+                      {item.isCopy ? (
+                        <button
+                          type="button"
+                          onClick={() => item.copyValue && handleCopy(item.copyValue)}
+                          className="w-full flex items-center justify-between px-4 py-2 text-[14px] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-neutral-100)] transition-colors text-left cursor-pointer"
+                        >
+                          <span className="font-normal">{copied ? "Copied!" : item.label}</span>
+                          {copied ? (
+                            <Check className="w-3.5 h-3.5 text-green-600" />
+                          ) : (
+                            <Copy className="w-3.5 h-3.5 opacity-60" />
+                          )}
+                        </button>
+                      ) : (
+                        <a
+                          role="menuitem"
+                          href={item.href}
+                          target={item.external ? "_blank" : undefined}
+                          rel={item.external ? "noopener noreferrer" : undefined}
+                          download={item.isDownload ? true : undefined}
+                          className="flex items-center justify-between px-4 py-2 text-[14px] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-neutral-100)] transition-colors"
+                        >
+                          <span className="font-normal">{item.label}</span>
+                          {item.external && (
+                            <ExternalLink className="w-3.5 h-3.5 opacity-60" />
+                          )}
+                          {item.isDownload && (
+                            <Download className="w-3.5 h-3.5 opacity-60" />
+                          )}
+                        </a>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             )}
           </div>
         </nav>
 
-        {/* Mobile Hamburger Button */}
-        <div className="md:hidden flex items-center">
+        {/* Mobile Hamburger Trigger */}
+        <div className="md:hidden flex items-center z-50">
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-expanded={mobileMenuOpen}
-            aria-label="Toggle mobile menu"
-            className="p-[var(--spacing-2)] text-[var(--color-text-primary)] focus-visible:outline-2 focus-visible:outline-[var(--color-text-primary)] rounded-[var(--radius-sm)]"
+            aria-label="Toggle menu"
+            className="p-[var(--spacing-2)] text-white rounded-[var(--radius-lg)] bg-[var(--color-action-primary)] shadow-sm cursor-pointer"
           >
             <svg
-              className="w-6 h-6"
+              className="w-5 h-5 transition-transform duration-200"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -146,38 +162,76 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Drawer */}
+      {/* Mobile Drawer Overlay */}
       {mobileMenuOpen && (
         <nav
-          className="md:hidden border-b border-[var(--color-border-default)] px-[var(--spacing-5)] py-[var(--spacing-4)] bg-[var(--color-neutral-0)] flex flex-col gap-[var(--spacing-3)]"
-          aria-label="Mobile Navigation"
+          className="md:hidden fixed inset-x-0 top-[73px] bottom-0 bg-[var(--color-background-default)]/95 backdrop-blur-md px-[var(--spacing-6)] py-[var(--spacing-6)] flex flex-col gap-[var(--spacing-4)] z-40 overflow-y-auto border-t border-[var(--color-border-default)]"
+          aria-label="Mobile Navigation Drawer"
         >
+          {/* Blog */}
           <Link
             href="/blog"
             onClick={() => setMobileMenuOpen(false)}
-            className="text-[length:var(--text-body-m)] font-[number:var(--font-weight-medium)] text-[var(--color-text-primary)] py-[var(--spacing-2)] focus-visible:outline-none"
+            className="text-[length:var(--text-heading-h4)] font-[number:var(--font-weight-medium)] text-[var(--color-text-primary)] py-[var(--spacing-2)] border-b border-[var(--color-border-default)]/50 transition-colors"
           >
             Blog
           </Link>
-          <div className="pt-[var(--spacing-2)] border-t border-[var(--color-border-default)]">
-            <p className="text-[length:var(--text-caption)] font-[number:var(--font-weight-semibold)] text-[var(--color-text-muted)] uppercase tracking-wider mb-[var(--spacing-2)]">
-              Contact
-            </p>
-            <ul className="flex flex-col gap-[var(--spacing-2)]">
-              {contactLinks.map((item) => (
-                <li key={item.label}>
-                  <a
-                    href={item.href}
-                    target={item.external ? "_blank" : undefined}
-                    rel={item.external ? "noopener noreferrer" : undefined}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="block text-[length:var(--text-label)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] py-[var(--spacing-1)]"
-                  >
-                    {item.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
+
+          {/* Contact Accordion */}
+          <div className="border-b border-[var(--color-border-default)]/50 pb-[var(--spacing-2)]">
+            <button
+              type="button"
+              onClick={() => setMobileContactOpen(!mobileContactOpen)}
+              className="w-full flex items-center justify-between text-[length:var(--text-heading-h4)] font-[number:var(--font-weight-medium)] text-[var(--color-text-primary)] py-[var(--spacing-2)] text-left cursor-pointer"
+            >
+              <span>Contact</span>
+              <ChevronDown
+                className={`w-6 h-6 transition-transform duration-200 text-[var(--color-text-secondary)] ${
+                  mobileContactOpen ? "rotate-180" : ""
+                }`}
+              />
+            </button>
+
+            {/* Expandable Mobile Links */}
+            {mobileContactOpen && (
+              <ul className="flex flex-col gap-[var(--spacing-3)] pt-[var(--spacing-3)] pb-[var(--spacing-2)] pl-[var(--spacing-2)]">
+                {contactLinks.map((item) => (
+                  <li key={item.label}>
+                    {item.isCopy ? (
+                      <button
+                        type="button"
+                        onClick={() => item.copyValue && handleCopy(item.copyValue)}
+                        className="flex items-center justify-between w-full text-[length:var(--text-body-m)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors py-1 text-left"
+                      >
+                        <span>{copied ? "Copied!" : item.label}</span>
+                        {copied ? (
+                          <Check className="w-4 h-4 text-green-600" />
+                        ) : (
+                          <Copy className="w-4 h-4 opacity-60" />
+                        )}
+                      </button>
+                    ) : (
+                      <a
+                        href={item.href}
+                        target={item.external ? "_blank" : undefined}
+                        rel={item.external ? "noopener noreferrer" : undefined}
+                        download={item.isDownload ? true : undefined}
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="flex items-center justify-between text-[length:var(--text-body-m)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors py-1"
+                      >
+                        <span>{item.label}</span>
+                        {item.external && (
+                          <ExternalLink className="w-4 h-4 opacity-60" />
+                        )}
+                        {item.isDownload && (
+                          <Download className="w-4 h-4 opacity-60" />
+                        )}
+                      </a>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         </nav>
       )}

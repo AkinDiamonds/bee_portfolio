@@ -4,6 +4,15 @@ import matter from 'gray-matter';
 
 const contentDirectory = path.join(process.cwd(), 'src/content');
 
+export type ProjectType = 'frontend' | 'backend' | 'fullstack' | 'workplace';
+
+export interface Metric {
+  label: string;
+  before?: string;
+  after: string;
+  delta?: string;
+}
+
 export interface ProjectData {
   title: string;
   slug: string;
@@ -11,6 +20,15 @@ export interface ProjectData {
   description: string;
   tags: string[];
   image: string;
+  type: ProjectType;
+  demoVideo?: string;
+  demoImage?: string;
+  githubUrl?: string;
+  liveUrl?: string;
+  metrics?: Metric[];
+  workplace?: boolean;
+  role?: string;
+  duration?: string;
   links?: {
     github?: string;
     live?: string;
@@ -46,7 +64,7 @@ export function getProjects(): ProjectData[] {
   const projectsDir = path.join(contentDirectory, 'projects');
   if (!fs.existsSync(projectsDir)) return [];
   const filenames = fs.readdirSync(projectsDir).filter((f) => f.endsWith('.mdx') || f.endsWith('.md'));
-  
+
   return filenames.map((filename) => {
     const filePath = path.join(projectsDir, filename);
     const fileContents = fs.readFileSync(filePath, 'utf8');
@@ -58,6 +76,15 @@ export function getProjects(): ProjectData[] {
       description: data.description || '',
       tags: data.tags || [],
       image: data.image || '',
+      type: (data.type as ProjectType) || 'fullstack',
+      demoVideo: data.demoVideo,
+      demoImage: data.demoImage,
+      githubUrl: data.githubUrl,
+      liveUrl: data.liveUrl,
+      metrics: data.metrics || [],
+      workplace: data.workplace || false,
+      role: data.role,
+      duration: data.duration,
       links: data.links || {},
       content,
     };

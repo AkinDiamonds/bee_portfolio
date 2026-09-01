@@ -4,34 +4,34 @@ import matter from 'gray-matter';
 
 const contentDirectory = path.join(process.cwd(), 'src/content');
 
-export type ProjectType = 'frontend' | 'backend' | 'fullstack' | 'workplace';
-
-export interface Metric {
-  label: string;
-  before?: string;
-  after: string;
-  delta?: string;
+export interface ProjectAward {
+  title: string;
+  details: string;
+  badge?: string;
 }
 
 export interface ProjectData {
-  title: string;
   slug: string;
-  summary: string;
+  title: string;
   description: string;
+  summary?: string;
   tags: string[];
-  image: string;
-  type: ProjectType;
+  type?: string;
   demoVideo?: string;
   demoImage?: string;
+  image?: string;
+  award?: ProjectAward;
+  timeTaken?: string;
+  metrics?: string[];
   githubUrl?: string;
   liveUrl?: string;
-  metrics?: Metric[];
+  docsUrl?: string;
   workplace?: boolean;
   role?: string;
   duration?: string;
-  links?: {
-    github?: string;
-    live?: string;
+  details?: {
+    overview: string;
+    architecture?: string;
   };
   content?: string;
 }
@@ -47,10 +47,11 @@ export interface BlogPostData {
 }
 
 export interface ExperienceItem {
+  id?: string;
   role: string;
   company: string;
   startDate: string;
-  endDate: string;
+  endDate?: string;
 }
 
 export interface TestimonialItem {
@@ -76,16 +77,19 @@ export function getProjects(): ProjectData[] {
       description: data.description || '',
       tags: data.tags || [],
       image: data.image || '',
-      type: (data.type as ProjectType) || 'fullstack',
+      type: data.type || 'Frontend & AI',
       demoVideo: data.demoVideo,
       demoImage: data.demoImage,
+      award: data.award,
+      timeTaken: data.timeTaken,
+      metrics: data.metrics || [],
       githubUrl: data.githubUrl,
       liveUrl: data.liveUrl,
-      metrics: data.metrics || [],
+      docsUrl: data.docsUrl,
       workplace: data.workplace || false,
       role: data.role,
       duration: data.duration,
-      links: data.links || {},
+      details: data.details,
       content,
     };
   });
@@ -129,6 +133,16 @@ export function getExperience(): ExperienceItem[] {
   if (!fs.existsSync(filePath)) return [];
   const fileContents = fs.readFileSync(filePath, 'utf8');
   return JSON.parse(fileContents);
+}
+
+export function formatExperiencePeriod(item: ExperienceItem): string {
+  if (!item.endDate || item.startDate === item.endDate) {
+    return item.startDate;
+  }
+  if (item.endDate.toLowerCase() === 'present') {
+    return `${item.startDate} — Present`;
+  }
+  return `${item.startDate} — ${item.endDate}`;
 }
 
 export function getTestimonials(): TestimonialItem[] {

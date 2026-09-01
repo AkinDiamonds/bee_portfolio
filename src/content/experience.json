@@ -1,20 +1,32 @@
 [
   {
-    "role": "TODO: Lead Software Engineer",
-    "company": "TODO: Tech Company",
-    "startDate": "2023",
-    "endDate": "Present"
+    "role": "Design and research",
+    "company": "Amazon",
+    "startDate": "2020",
+    "endDate": "2024"
   },
   {
-    "role": "TODO: Senior Full Stack Developer",
-    "company": "TODO: Innovation Lab",
-    "startDate": "2021",
-    "endDate": "2023"
+    "role": "Product design lead",
+    "company": "Acorns",
+    "startDate": "2018",
+    "endDate": "2020"
   },
   {
-    "role": "TODO: Software Engineer",
-    "company": "TODO: Studio",
-    "startDate": "2019",
-    "endDate": "2021"
+    "role": "Exploring internet patterns for neurodiversity",
+    "company": "Stanford University",
+    "startDate": "2018",
+    "endDate": "2018"
+  },
+  {
+    "role": "Designing some software",
+    "company": "Tesla",
+    "startDate": "2017",
+    "endDate": "2018"
+  },
+  {
+    "role": "Generalist",
+    "company": "Design agencies",
+    "startDate": "2017",
+    "endDate": "2018"
   }
 ]

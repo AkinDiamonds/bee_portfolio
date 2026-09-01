@@ -6,12 +6,12 @@
 
 - **Ask before guessing** on real content (name, bio, project descriptions, testimonials, work history) and any design value not defined in §2. Never invent facts about the person this site belongs to.
 - Use `TODO:`-prefixed placeholder content anywhere real content isn't supplied yet. Never fabricate a testimonial, employer, or project detail.
-- **After every section**, run in this order and fix everything before moving on:
+- **After every section**, tell me to run in this order and when it is successful, fine if not, I will either find the error myself or paste the output to you. NEVER RUN THEM BY YOURSELF SO I DON'T WASTE TOKENS:
   1. `npm run build`
   2. `npm run lint`
   3. `npx tsc --noEmit`
   4. `npx playwright test` (once §5 test setup exists)
-- **One git commit per completed, working, tested section.** Never bundle sections into one commit.
+- **One git commit per completed, working, tested section.** Never bundle sections into one commit. I will commit it after you tell me it is successful and I agree.
 - **Animation policy:** nothing on this site loops or autoplays except the AI bee (later phase). Standard hover/focus micro-interactions are fine everywhere. The one explicit exception is the Technologies section's hover-triggered "twinkle" (§3) — still hover-gated, not always-on.
 - **No arbitrary Tailwind values.** Every size/color/spacing must come from the tokens in `app/globals.css`. Need a value that doesn't exist? Add it as a token there — don't hardcode it in a component.
 - No component over ~150 lines — split into subcomponents before that.

@@ -2,19 +2,19 @@ import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
 test.describe('Hero Section', () => {
-  test('renders name and static role line accurately', async ({ page }) => {
+  test('renders name and value proposition headline accurately', async ({ page }) => {
     await page.goto('/');
 
     const heroSection = page.locator('section[aria-label="Hero Introduction"]');
     await expect(heroSection).toBeVisible();
 
-    const nameHeading = heroSection.locator('h1');
-    await expect(nameHeading).toBeVisible();
-    await expect(nameHeading).toContainText('TODO: Firstname Lastname');
+    const nameBadge = heroSection.locator('span').first();
+    await expect(nameBadge).toBeVisible();
+    await expect(nameBadge).toContainText('Simeon Akinrinola');
 
-    const roleLine = heroSection.locator('p');
-    await expect(roleLine).toBeVisible();
-    await expect(roleLine).toContainText('TODO: Software Engineer');
+    const headline = heroSection.locator('h1');
+    await expect(headline).toBeVisible();
+    await expect(headline).toContainText(/Building better software/i);
   });
 
   test('has no layout shift on load', async ({ page }) => {

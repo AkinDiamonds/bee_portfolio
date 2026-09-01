@@ -1,7 +1,17 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
-
 export default function Hero() {
+  const handleScrollToProjects = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const projectsSection = document.querySelector("#projects .groups")|| document.getElementById("projects");
+    if (projectsSection) {
+      projectsSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      window.history.pushState(null, "", "#projects");
+    }
+  };
+
   return (
     <section
       aria-label="Hero Introduction"
@@ -27,12 +37,13 @@ export default function Hero() {
 
         {/* Action Pills */}
         <div className="mt-[var(--spacing-8)] flex items-center justify-center gap-[var(--spacing-4)] flex-wrap">
-          <Link
+          <a
             href="#projects"
-            className="inline-flex items-center justify-center px-[var(--spacing-6)] py-[var(--spacing-3)] bg-[var(--color-text-primary)] text-[var(--color-neutral-0)] font-[number:var(--font-weight-medium)] text-[length:var(--text-body-s)] rounded-full transition-transform active:scale-95 hover:opacity-90 shadow-sm"
+            onClick={handleScrollToProjects}
+            className="inline-flex items-center justify-center px-[var(--spacing-6)] py-[var(--spacing-3)] bg-[var(--color-text-primary)] text-[var(--color-neutral-0)] font-[number:var(--font-weight-medium)] text-[length:var(--text-body-s)] rounded-full transition-transform active:scale-95 hover:opacity-90 shadow-sm cursor-pointer"
           >
             Explore Projects
-          </Link>
+          </a>
           <Link
             href="/blog"
             className="inline-flex items-center justify-center px-[var(--spacing-6)] py-[var(--spacing-3)] bg-[var(--color-neutral-100)] text-[var(--color-text-primary)] font-[number:var(--font-weight-medium)] text-[length:var(--text-body-s)] rounded-full transition-colors hover:bg-[var(--color-neutral-200)] active:scale-95"

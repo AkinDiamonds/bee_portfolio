@@ -28,6 +28,8 @@ export default function Navbar() {
   const [copied, setCopied] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileContactOpen, setMobileContactOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const lastScrollY = useRef(0);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const handleCopy = (value: string) => {
@@ -35,6 +37,25 @@ export default function Navbar() {
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
+
+  // Collapse Navbar when scrolling down, show when scrolling up
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      if (currentScrollY > lastScrollY.current && currentScrollY > 80) {
+        // Scrolling down & past top threshold -> hide
+        setIsVisible(false);
+        setIsHovered(false);
+      } else {
+        // Scrolling up -> show
+        setIsVisible(true);
+      }
+      lastScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // Lock body scroll when mobile drawer is active
   useEffect(() => {
@@ -46,8 +67,12 @@ export default function Navbar() {
   }, [mobileMenuOpen]);
 
   return (
-    <header className="w-full bg-[var(--color-background-default)] sticky top-0 z-40">
-      <div className="max-w-[var(--container-portfolio)] mx-auto px-[var(--spacing-5)] md:px-[var(--spacing-8)] py-[var(--spacing-5)] flex items-center justify-between">
+    <header
+      className={`w-full h-16 bg-[var(--color-background-default)]/90 backdrop-blur-md sticky top-0 z-40 transition-transform duration-300 ${
+        isVisible || mobileMenuOpen ? "translate-y-0" : "-translate-y-full"
+      }`}
+    >
+      <div className="max-w-[var(--container-portfolio)] h-full mx-auto px-[var(--spacing-5)] md:px-[var(--spacing-8)] flex items-center justify-between">
         
         {/* Brand */}
         <Link
@@ -84,9 +109,7 @@ export default function Navbar() {
               className="inline-flex items-center gap-1.5 text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors py-[var(--spacing-2)] px-[var(--spacing-3)] cursor-pointer"
             >
               <span>Contact</span>
-              <ChevronDown
-                className={`w-3.5 h-3.5`}
-              />
+              <ChevronDown className="w-3.5 h-3.5" />
             </button>
 
             {isHovered && (
@@ -165,7 +188,7 @@ export default function Navbar() {
       {/* Mobile Drawer Overlay */}
       {mobileMenuOpen && (
         <nav
-          className="md:hidden fixed inset-x-0 top-[73px] bottom-0 bg-[var(--color-background-default)]/95 backdrop-blur-md px-[var(--spacing-6)] py-[var(--spacing-6)] flex flex-col gap-[var(--spacing-4)] z-40 overflow-y-auto border-t border-[var(--color-border-default)]"
+          className="md:hidden absolute top-full left-0 right-0 w-full h-[calc(100dvh-100%)] bg-[var(--color-background-default)]/99 backdrop-blur-md px-[var(--spacing-6)] py-[var(--spacing-6)] flex flex-col gap-[var(--spacing-4)] z-50 border-t border-[var(--color-border-default)] overflow-y-auto"
           aria-label="Mobile Navigation Drawer"
         >
           {/* Blog */}

@@ -2,14 +2,14 @@ import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
 test.describe('Featured Projects Section', () => {
-  test('renders project cards and links to valid case-study routes', async ({ page }) => {
+  test('renders project cards with title, description, and view full details action', async ({ page }) => {
     await page.goto('/');
 
     const section = page.locator('section[aria-label="Featured Projects"]');
     await expect(section).toBeVisible();
 
     const heading = section.locator('h2');
-    await expect(heading).toContainText('Featured Projects');
+    await expect(heading).toContainText(/Featured/i);
 
     const projectCards = section.locator('article');
     const count = await projectCards.count();
@@ -17,27 +17,25 @@ test.describe('Featured Projects Section', () => {
 
     for (let i = 0; i < count; i++) {
       const card = projectCards.nth(i);
-      const link = card.getByRole('link', { name: /view case study/i });
-      await expect(link).toBeVisible();
-      const href = await link.getAttribute('href');
-      expect(href).toMatch(/^\/projects\/[a-z0-9-]+$/);
-
-      // Verify navigating to the case study route returns HTTP 200 (not 404)
-      const response = await page.request.get(href!);
-      expect(response.status()).toBe(200);
+      const btn = card.getByRole('button', { name: /view full details/i });
+      await expect(btn).toBeVisible();
     }
   });
 
-  test('navigates to case study page successfully', async ({ page }) => {
+  test('toggles inline project details in-place', async ({ page }) => {
     await page.goto('/');
-    const firstProjectLink = page
-      .locator('section[aria-label="Featured Projects"] article')
-      .first()
-      .getByRole('link', { name: /view case study/i });
 
-    await firstProjectLink.click();
-    await expect(page).toHaveURL(/\/projects\/[a-z0-9-]+/);
-    await expect(page.locator('h1')).toBeVisible();
+    const firstCard = page.locator('section[aria-label="Featured Projects"] article').first();
+    const detailsBtn = firstCard.getByRole('button', { name: /view full details/i });
+    await detailsBtn.click();
+
+    // Verify in-place details are visible
+    const overviewBtn = firstCard.getByRole('button', { name: /view overview/i });
+    await expect(overviewBtn).toBeVisible();
+
+    // Close / return to overview
+    await overviewBtn.click();
+    await expect(detailsBtn).toBeVisible();
   });
 
   test('passes axe accessibility checks', async ({ page }) => {

@@ -87,9 +87,9 @@
   --spacing-9: 6rem;
   --spacing-10: 8rem;
 
-  --spacing-section: 6rem;
-  --spacing-section-lg: 8rem;
-  --spacing-section-mobile: 3rem;
+  --spacing-section: 4rem;
+  --spacing-section-lg: 6rem;
+  --spacing-section-mobile: 2rem;
 
   /* COLORS — primitives */
   --color-neutral-0: #ffffff;

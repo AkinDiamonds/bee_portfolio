@@ -201,36 +201,28 @@ Final values — from Figma Dev Mode. Paste this verbatim into `app/globals.css`
 Two-column card: left = title (`--text-heading-h2`) + 2–3 sentence description (`--text-body-m`, `--color-text-secondary`); right = large tile, `--radius-lg`, holding a real screenshot or a soft radial-glow treatment behind a wordmark/icon using `--color-accent-primary` → `--color-accent-secondary`. Alternate text side left/right for 3+ projects; keep consistent for 2. Each card links to a full case-study page.
 
 ### Technologies / Skills
-**Typography only — no chart.** Three groups as plain text columns: `Frontend`, `Backend & DevOps`, `AI`. Group name = `--text-label` + `--color-text-muted`, uppercase optional; tech names listed beneath in `--text-body-m`, `--color-text-primary`. Optional single monochrome glyph per item — no colored logos.
-
-**Twinkle micro-interaction** on hover/focus of an individual tech item: a small cluster of faint dots (`--color-border-default` or `--color-text-muted` tone) fades in and softly twinkles around the item, then fades out on hover-out. Must be:
-- Scoped to the hovered item only — never page-wide, never always-on
-- CSS `opacity`/`transform` keyframes only, `animation-play-state: paused` by default, `running` only while hovered/focused
-- Zero measurable cost at rest (no canvas, no JS animation loop running when idle)
-
-This is the one explicit exception to the animation policy in §0. Do not extend it elsewhere without approval.
+**Typography only — no chart, pills, badges, or borders.** Three groups as plain text columns: `Frontend`, `Backend & DevOps`, `AI Engineering`. Group name = `--text-label` + `font-mono` + `--color-text-muted`, uppercase; tech names listed beneath in `--text-body-l`, `font-medium`, `--color-text-secondary`, transitioning to `--color-text-primary` on hover.
+Contains an empty `<div id="canvas-particle-stage" className="absolute inset-0 pointer-events-none z-0" aria-hidden="true" />` inside the section as the mount point for the Phase 2/3 WebGL particle dust canvas.
 
 ### Work Experience
-Plain row list: role (`--text-body-m`, bold, left) — company (`--text-body-m`, regular, mid) — date range (`--text-body-s`, `--color-text-muted`, right-aligned). Hairline `--color-border-default` divider between rows. No logos, no icons, no timeline graphic.
+Plain row list: role (`--text-body-m`, bold, left) — company (`--text-body-m`, regular, mid) — date range (`--text-body-s`, `--color-text-muted`, right-aligned). Hairline `--color-border-default` divider between rows. Responsive 3-column grid on desktop, Company-first stack on mobile (<768px).
 
 ### Testimonials
-Quote (`--text-body-l`) + name + role/company (`--text-label`, `--color-text-muted`). Horizontal scroll or static row of 2–3 on desktop, stacked on mobile. No card borders — spacing separates them.
+Option D whisper-level header label (`nice things great persons said about me` in `--text-body-l` regular, muted, tracked). Display quote using `--text-quote` / `--text-heading-h2` with CSS fade+drift transitions (`opacity` + `translate-y`). Interactive horizontal avatar track with active ring indicator, grayscale inactive state, and smooth auto-centering scroll.
 
-### Latest Blog
-Horizontal row of cards. Each: dark rounded thumbnail (`--radius-lg`) with large bold white text overlaid near the bottom, then below: post title (`--text-heading-h4`), `date · category` (`--text-caption`, `--color-text-muted`), "Read blog →" link. Section header "Latest Blogs" + pill "View blog" button top-right, `--radius-pill`, linking to `/blog`.
+### Latest Blogs
+Horizontal row of cards with smooth scroll. Each card: rounded dark tile (`--radius-lg`) with bold white title overlaid, then below: post title (`--text-heading-h4`), `date · category` (`--text-caption`, `--color-text-muted`), "Read blog →" link. Section header "Latest Blogs" + pill "View blog" button top-right linking to `/blog`, and desktop pagination arrows `< >` for horizontal scrolling.
 
 ### Footer
-Small nav repeat, social icon row, one dry line referencing the bee, copyright line (`--text-caption`). Nothing else.
-
-### Bee — folder only, do not build yet
-Create `src/components/bee/README.md` only: "Phase 2 — do not implement until all static sections are built, reviewed, tested, and approved."
+Hairline top border, honey-gold bee accent dot (`--color-bee-accent: #F0B429`), bee humor line (*"This site is haunted by a bee. It's not a bug, it's the most important feature."*), social contact icon buttons (LinkedIn, GitHub, Email), copyright notice.
 
 ## 4. Content/data structure
 
 - `src/content/projects/*.mdx` — frontmatter: `title, slug, summary, description, tags, image, links`
 - `src/content/blog/*.mdx` — frontmatter: `title, slug, date, category, excerpt, coverImage`
 - `src/content/experience.json` — array of `{ role, company, startDate, endDate }`
-- `src/content/testimonials.json` — array of `{ quote, name, role, company }`
+- `src/content/testimonials.json` — array of `{ quote, name, role, company, avatarUrl }`
+- `src/content/technologies.json` — array of `{ category, items }`
 
 `TODO:`-prefix placeholder content until real content is supplied. Never invent real names, employers, or quotes.
 

@@ -1,20 +1,23 @@
 [
   {
-    "quote": "TODO: A high-impact testimonial highlighting engineering rigor, architectural leadership, and creative problem solving across complex systems.",
-    "name": "TODO: Colleague Name",
+    "quote": "TODO: Simeon shipped a full design system in a week. Most teams take a quarter.",
+    "name": "TODO: Alex Rivera",
     "role": "TODO: VP of Engineering",
-    "company": "TODO: Organization"
+    "company": "TODO: Acme Corp",
+    "avatarUrl": "https://i.pravatar.cc/80?u=alex-rivera"
   },
   {
-    "quote": "TODO: Exceptional ability to bridge product design and technical execution, delivering elegant solutions reliably and swiftly.",
-    "name": "TODO: Collaborator Name",
+    "quote": "TODO: Rare to find someone who thinks in systems and ships beautiful interfaces.",
+    "name": "TODO: Priya Nair",
     "role": "TODO: Head of Product",
-    "company": "TODO: Enterprise Partner"
+    "company": "TODO: Orbit Labs",
+    "avatarUrl": "https://i.pravatar.cc/80?u=priya-nair"
   },
   {
-    "quote": "TODO: Highly skilled engineer with a sharp eye for aesthetic polish, web accessibility, and performance optimization.",
-    "name": "TODO: Manager Name",
+    "quote": "TODO: The kind of engineer who makes every deadline feel like a comfortable ceiling.",
+    "name": "TODO: Marcus Chen",
     "role": "TODO: Director of Technology",
-    "company": "TODO: Creative Agency"
+    "company": "TODO: Fieldwork Studio",
+    "avatarUrl": "https://i.pravatar.cc/80?u=marcus-chen"
   }
 ]

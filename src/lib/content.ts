@@ -59,6 +59,7 @@ export interface TestimonialItem {
   name: string;
   role: string;
   company: string;
+  avatarUrl: string;
 }
 
 export function getProjects(): ProjectData[] {
@@ -145,9 +146,22 @@ export function formatExperiencePeriod(item: ExperienceItem): string {
   return `${item.startDate} — ${item.endDate}`;
 }
 
+export interface TechCategory {
+  category: string;
+  items: string[];
+}
+
 export function getTestimonials(): TestimonialItem[] {
   const filePath = path.join(contentDirectory, 'testimonials.json');
   if (!fs.existsSync(filePath)) return [];
   const fileContents = fs.readFileSync(filePath, 'utf8');
   return JSON.parse(fileContents);
 }
+
+export function getTechStack(): TechCategory[] {
+  const filePath = path.join(contentDirectory, 'technologies.json');
+  if (!fs.existsSync(filePath)) return [];
+  const fileContents = fs.readFileSync(filePath, 'utf8');
+  return JSON.parse(fileContents);
+}
+

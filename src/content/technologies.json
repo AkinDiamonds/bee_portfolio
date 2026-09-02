@@ -1,0 +1,33 @@
+[
+  {
+    "category": "Frontend",
+    "items": [
+      "Next.js",
+      "React",
+      "Tailwind CSS",
+      "Framer Motion",
+      "WebGL"
+    ]
+  },
+  {
+    "category": "Backend & DevOps",
+    "items": [
+      "Node.js",
+      "Python",
+      "Go",
+      "PostgreSQL",
+      "Redis",
+      "Kafka"
+    ]
+  },
+  {
+    "category": "AI Engineering",
+    "items": [
+      "PyTorch",
+      "LangChain",
+      "Pinecone",
+      "Autonomous Agents",
+      "LLM Fine-tuning"
+    ]
+  }
+]

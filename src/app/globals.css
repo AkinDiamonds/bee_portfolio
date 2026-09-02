@@ -71,6 +71,12 @@
   --text-caption--line-height: 0.975rem;
   --text-caption--font-weight: 500;
 
+  /* Quote — testimonials large display quote — 28 mobile / 40 desktop */
+  --text-quote: 1.75rem;
+  --text-quote--line-height: 2.1rem;
+  --text-quote--letter-spacing: -0.01em;
+  --text-quote--font-weight: 400;
+
   --tracking-tight-display: -0.02em;
   --tracking-tight-heading: -0.01em;
   --tracking-normal: 0em;
@@ -120,6 +126,8 @@
 
   --color-accent-primary: var(--color-brand-gradient-1);
   --color-accent-secondary: var(--color-brand-gradient-2);
+
+  --color-bee-accent: #F0B429;
 
   /* RADIUS */
   --radius-sm: 0.5rem;

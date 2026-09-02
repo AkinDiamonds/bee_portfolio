@@ -97,6 +97,11 @@
   --spacing-section-lg: 6rem;
   --spacing-section-mobile: 2rem;
 
+  --border-width-hairline: 1px;
+
+  --text-footer-monolith: clamp(var(--text-display-l), 18vw, calc(var(--spacing-10) * 2));
+  --text-footer-monolith--line-height: 0.8;
+
   /* COLORS — primitives */
   --color-neutral-0: #ffffff;
   --color-neutral-50: #fafafa;

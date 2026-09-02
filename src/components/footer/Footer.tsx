@@ -1,73 +1,66 @@
-import React from "react";
 import { Mail } from "lucide-react";
 import { FaLinkedin } from "react-icons/fa";
 import { SiGithub } from "react-icons/si";
+import styles from "./Footer.module.css";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="relative w-full overflow-hidden mt-[var(--spacing-section-mobile)] md:mt-[var(--spacing-section)]">
-      {/* STEP 1: TOP METADATA ROW */}
-      <div className="py-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-        {/* Left: Quote & Subtext */}
-        <div className="max-w-xl">
-          <p className="text-sm md:text-base font-medium text-[var(--color-text-primary)] leading-snug">
-            &ldquo;This site is haunted by a bee. It&apos;s not a bug, it&apos;s the most important feature.&rdquo;
-          </p>
-          <p className="text-xs text-[var(--color-text-muted)] font-mono mt-1">
-            The bee is eval-driven and is constantly improved.{" "}
-            <a
-              href="#bee"
-              className="text-[var(--color-text-muted)] hover:text-[var(--color-bee-accent)] transition-colors underline inline-flex items-center gap-1"
-            >
-              Learn more
-            </a>
-          </p>
-        </div>
+    <footer className={styles.footer}>
+      <div className={styles.metaRow}>
+        <p className={styles.quote}>
+          &ldquo;This site is haunted by a bee. It&apos;s not a bug, it&apos;s the most important feature.&rdquo;
+        </p>
 
-        {/* Right: Naked SVG Social Icons */}
-        <div className="flex items-center gap-6 shrink-0">
+        <nav className={styles.socialLinks} aria-label="Social links">
           <a
-            href="https://linkedin.com"
+            href="https://linkedin.com/in/simeon-akinrinola"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="LinkedIn Profile"
-            className="text-[var(--color-text-muted)] hover:text-[var(--color-bee-accent)] transition-colors duration-300"
+            aria-label="LinkedIn profile"
+            className={styles.socialLink}
           >
-            <FaLinkedin className="w-5 h-5" />
+            <FaLinkedin aria-hidden="true" />
           </a>
           <a
-            href="https://github.com"
+            href="https://github.com/AkinDiamonds"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="GitHub Profile"
-            className="text-[var(--color-text-muted)] hover:text-[var(--color-bee-accent)] transition-colors duration-300"
+            aria-label="GitHub profile"
+            className={styles.socialLink}
           >
-            <SiGithub className="w-5 h-5" />
+            <SiGithub aria-hidden="true" />
           </a>
           <a
-            href="mailto:simeon@example.com"
-            aria-label="Send Email"
-            className="text-[var(--color-text-muted)] hover:text-[var(--color-bee-accent)] transition-colors duration-300"
+            href="mailto:simeonakinrinola7@gmail.com"
+            aria-label="Email Simeon Akinrinola"
+            className={styles.socialLink}
           >
-            <Mail className="w-5 h-5" />
+            <Mail aria-hidden="true" />
           </a>
-        </div>
+        </nav>
       </div>
 
-      {/* STEP 2: THE MASSIVE MONOLITH */}
-      <div
-        id="bee-playground"
-        className="w-full text-center md:text-left select-none my-8"
-      >
-        <span className="text-[18vw] leading-[0.8] tracking-tighter font-bold text-[var(--color-text-primary)] block font-display">
-          SIMEON.
+      <div id="bee-playground" className={styles.wordmarkStage}>
+        <span className={styles.srOnly}>Simeon.</span>
+        <span className={styles.wordmark} aria-hidden="true">
+          <span>SIME</span>
+          <span
+            id="bee-landing-pad"
+            data-bee-landing-zone="center"
+            className={styles.landingPad}
+          >
+            O
+          </span>
+          <span>N</span>
+          <span className={styles.period} data-bee-accent="true">
+            .
+          </span>
         </span>
       </div>
 
-      {/* STEP 3: BOTTOM ANCHOR ROW */}
-      <div className="pt-8 pb-12 flex flex-col md:flex-row justify-between items-center text-xs text-[var(--color-text-muted)] font-mono">
+      <div className={styles.bottomRow}>
         <p>© {currentYear} Simeon Akinrinola. All rights reserved.</p>
       </div>
     </footer>

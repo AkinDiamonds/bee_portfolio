@@ -1,10 +1,11 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import Navbar from "@/components/nav/Navbar";
 import { getBlogPosts } from "@/lib/content";
 
-export const metadata = {
-  title: "Blog | Portfolio",
-  description: "Articles and thoughts on engineering and design.",
+export const metadata: Metadata = {
+  title: "Blog",
+  description: "TODO: Approved blog archive description.",
 };
 
 export default function BlogIndexPage() {

@@ -1,21 +1,11 @@
 "use client";
 
-import React from "react";
 import Link from "next/link";
 export default function Hero() {
-  const handleScrollToProjects = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    const projectsSection = document.querySelector("#projects .groups")|| document.getElementById("projects");
-    if (projectsSection) {
-      projectsSection.scrollIntoView({ behavior: "smooth", block: "start" });
-      window.history.pushState(null, "", "#projects");
-    }
-  };
-
   return (
     <section
       aria-label="Hero Introduction"
-      className="relative min-h-[calc(100vh-80px)] flex flex-col justify-center items-center text-center px-[var(--spacing-5)] py-[var(--spacing-8)] overflow-hidden"
+      className="relative min-h-[calc(100svh-var(--spacing-8))] flex flex-col justify-center items-center text-center px-[var(--spacing-5)] py-[var(--spacing-8)] overflow-hidden"
     >
       {/* Container constrained for optimal reading width and Bee clearance */}
       <div className="max-w-4xl mx-auto flex flex-col items-center z-10">
@@ -31,7 +21,7 @@ export default function Hero() {
         </h1>
 
         {/* Subtitle: The "How" and "What" */}
-        <p className="mt-[var(--spacing-6)] text-[length:var(--text-body-l)] md:text-[20px] leading-relaxed font-[number:var(--font-weight-regular)] text-[var(--color-text-secondary)] max-w-xl text-balance">
+        <p className="mt-[var(--spacing-6)] text-[length:var(--text-body-l)] font-[number:var(--font-weight-regular)] text-[var(--color-text-secondary)] max-w-xl text-balance">
           Frontend, Backend, and AI Engineering.
         </p>
 
@@ -39,7 +29,6 @@ export default function Hero() {
         <div className="mt-[var(--spacing-8)] flex items-center justify-center gap-[var(--spacing-4)] flex-wrap">
           <a
             href="#projects"
-            onClick={handleScrollToProjects}
             className="inline-flex items-center justify-center px-[var(--spacing-6)] py-[var(--spacing-3)] bg-[var(--color-text-primary)] text-[var(--color-neutral-0)] font-[number:var(--font-weight-medium)] text-[length:var(--text-body-s)] rounded-full transition-transform active:scale-95 hover:opacity-90 shadow-sm cursor-pointer"
           >
             Explore Projects
@@ -56,7 +45,8 @@ export default function Hero() {
       {/* Bee Perch*/}
       <div 
         id="bee-perch-target" 
-        className="aria-hidden:true pointer-events-none absolute top-12 right-6 md:right-16 w-32 h-32 md:w-48 md:h-48"
+        aria-hidden="true"
+        className="pointer-events-none absolute top-12 right-6 md:right-16 w-32 h-32 md:w-48 md:h-48"
       />
     </section>
   );

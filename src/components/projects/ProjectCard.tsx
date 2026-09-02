@@ -83,7 +83,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
 
             {/* 2. Award Details in Clean Caption Style */}
             {project.award && (
-              <p className="text-[length:var(--text-caption)] text-[var(--color-text-muted)] leading-relaxed pt-1">
+              <p className="text-[length:var(--text-caption)] text-[var(--color-text-secondary)] leading-relaxed pt-1">
                 {project.award.title} &middot; {project.award.details}
               </p>
             )}
@@ -91,7 +91,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
             {/* 3. Time Taken to Build */}
             {project.timeTaken && (
               <div className="text-sm">
-                <span className="text-[var(--color-text-muted)] font-mono text-xs uppercase tracking-wider block">
+                <span className="text-[var(--color-text-secondary)] font-mono text-xs uppercase tracking-wider block">
                   Time to build:
                 </span>
                 <span className="text-[var(--color-text-primary)] font-medium">
@@ -103,13 +103,13 @@ export function ProjectCard({ project }: ProjectCardProps) {
             {/* 4. Key Metrics List */}
             {project.metrics && project.metrics.length > 0 && (
               <div className="space-y-1.5 pt-1">
-                <span className="text-[var(--color-text-muted)] font-mono text-xs uppercase tracking-wider block">
+                <span className="text-[var(--color-text-secondary)] font-mono text-xs uppercase tracking-wider block">
                   Key Metrics:
                 </span>
                 <ul className="space-y-1 text-sm text-[var(--color-text-secondary)]">
                   {project.metrics.map((metric, i) => (
                     <li key={i} className="flex items-baseline gap-2">
-                      <span className="text-[var(--color-text-muted)] select-none">&bull;</span>
+                      <span className="text-[var(--color-text-secondary)] select-none">&bull;</span>
                       <span>{metric}</span>
                     </li>
                   ))}
@@ -119,7 +119,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
 
             {/* 5. Tech Stack */}
             <div className="space-y-1.5 pt-1">
-              <span className="text-[var(--color-text-muted)] font-mono text-xs uppercase tracking-wider block">
+              <span className="text-[var(--color-text-secondary)] font-mono text-xs uppercase tracking-wider block">
                 Technologies:
               </span>
               <div className="flex flex-wrap gap-1.5">
@@ -137,7 +137,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
             {/* 6. Architecture / What Was Built */}
             {(project.details?.architecture || project.details?.overview) && (
               <div className="space-y-1 text-sm text-[var(--color-text-secondary)] leading-relaxed pt-1">
-                <span className="text-[var(--color-text-muted)] font-mono text-xs uppercase tracking-wider block">
+                <span className="text-[var(--color-text-secondary)] font-mono text-xs uppercase tracking-wider block">
                   Architecture &amp; Engineering:
                 </span>
                 <p>
@@ -182,7 +182,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
                 </a>
               )}
               {project.workplace && (
-                <span className="text-xs text-[var(--color-text-muted)] italic">
+                <span className="text-xs text-[var(--color-text-secondary)] italic">
                   Proprietary system &mdash; source confidential
                 </span>
               )}
@@ -208,10 +208,9 @@ export function ProjectCard({ project }: ProjectCardProps) {
             {project.demoVideo ? (
               <video
                 src={project.demoVideo}
-                autoPlay
-                loop
                 muted
                 playsInline
+                controls
                 className="w-full h-full object-cover object-top"
               />
             ) : project.demoImage ? (
@@ -232,7 +231,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
                 <span className="font-semibold text-sm text-[var(--color-text-primary)]">
                   {project.title}
                 </span>
-                <span className="text-xs text-[var(--color-text-muted)]">
+                <span className="text-xs text-[var(--color-text-secondary)]">
                   {project.type || "AI & Frontend"} Pipeline Preview
                 </span>
               </div>

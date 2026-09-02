@@ -5,11 +5,12 @@ test.describe('Testimonials Section', () => {
   test('renders section label and first testimonial quote', async ({ page }) => {
     await page.goto('/');
 
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
+
     const section = page.locator('section[aria-label="Testimonials"]');
     await expect(section).toBeVisible();
 
-    // Section label is present (aria-hidden but in DOM)
-    const label = section.locator('p[aria-hidden="true"]');
+    const label = section.locator('p').first();
     await expect(label).toContainText(/nice things great persons said about me/i);
 
     // First blockquote is visible
@@ -37,6 +38,22 @@ test.describe('Testimonials Section', () => {
     await page.waitForTimeout(300);
     await expect(secondBtn).toHaveAttribute('aria-selected', 'true');
     await expect(firstBtn).toHaveAttribute('aria-selected', 'false');
+
+    const trackMetrics = await page.evaluate(() => {
+      const track = document.querySelector('section[aria-label="Testimonials"] [role="tablist"]') as HTMLElement | null;
+      const active = document.querySelector('section[aria-label="Testimonials"] [role="tab"][aria-selected="true"]') as HTMLElement | null;
+      if (!track || !active) return null;
+
+      const trackRect = track.getBoundingClientRect();
+      const activeRect = active.getBoundingClientRect();
+      return {
+        trackCenter: trackRect.left + trackRect.width / 2,
+        activeCenter: activeRect.left + activeRect.width / 2,
+      };
+    });
+
+    expect(trackMetrics).not.toBeNull();
+    expect(Math.abs(trackMetrics!.activeCenter - trackMetrics!.trackCenter)).toBeLessThan(24);
   });
 
   test('is keyboard navigable — avatar buttons are focusable and activatable', async ({ page }) => {
@@ -50,6 +67,38 @@ test.describe('Testimonials Section', () => {
     await secondBtn.press('Enter');
     await page.waitForTimeout(300);
     await expect(secondBtn).toHaveAttribute('aria-selected', 'true');
+  });
+
+  test('moves one testimonial at a time and wraps with arrow keys without scrolling the page', async ({ page }) => {
+    await page.goto('/');
+    const section = page.locator('section[aria-label="Testimonials"]');
+    const firstButton = section.locator('[role="tab"]').first();
+
+    await section.scrollIntoViewIfNeeded();
+    await firstButton.focus();
+    const scrollPositionBeforeChange = await page.evaluate(() => window.scrollY);
+    await firstButton.press('ArrowLeft');
+    await expect(section.locator('[role="tab"]').last()).toHaveAttribute('aria-selected', 'true');
+    expect(await page.evaluate(() => window.scrollY)).toBe(scrollPositionBeforeChange);
+  });
+
+  test('auto-advances only while the section is visible and pauses when scrolled past', async ({ page }) => {
+    await page.goto('/');
+
+    const section = page.locator('section[aria-label="Testimonials"]');
+    await section.scrollIntoViewIfNeeded();
+
+    const getActiveLabel = () => section.locator('[role="tab"][aria-selected="true"]').first().getAttribute('aria-label');
+    const initialLabel = await getActiveLabel();
+    await expect.poll(getActiveLabel, { timeout: 6500 }).not.toBe(initialLabel);
+
+    await page.evaluate(() => {
+      window.scrollTo(0, document.documentElement.scrollHeight);
+    });
+
+    const pausedLabel = await getActiveLabel();
+    await page.waitForTimeout(5000);
+    await expect.poll(getActiveLabel, { timeout: 1000 }).toBe(pausedLabel);
   });
 
   test('no horizontal scroll at 375px mobile', async ({ page }) => {

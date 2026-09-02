@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import Image from "next/image";
 import { TestimonialItem } from "@/lib/content";
 
@@ -10,134 +10,120 @@ interface TestimonialsProps {
 
 export default function Testimonials({ testimonials }: TestimonialsProps) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [prevIndex, setPrevIndex] = useState<number | null>(null);
-  const [animating, setAnimating] = useState(false);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
+  const [isInView, setIsInView] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
 
-  function goTo(idx: number) {
-    if (idx === activeIndex || animating) return;
-    setAnimating(true);
-    setPrevIndex(activeIndex);
-    if (timerRef.current) clearTimeout(timerRef.current);
-    timerRef.current = setTimeout(() => {
-      setActiveIndex(idx);
-      setPrevIndex(null);
-      setAnimating(false);
-    }, 220);
-  }
-
   useEffect(() => {
-    if (trackRef.current) {
-      const activeEl = trackRef.current.querySelector<HTMLElement>(`[data-index="${activeIndex}"]`);
-      if (activeEl) {
-        activeEl.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
-      }
-    }
-  }, [activeIndex]);
+    const section = sectionRef.current;
+    if (!section || typeof window === "undefined") return;
 
-  useEffect(() => {
+    const updateVisibility = () => {
+      const rect = section.getBoundingClientRect();
+      const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+      setIsInView(rect.bottom > 0 && rect.top < viewportHeight);
+    };
+
+    updateVisibility();
+    window.addEventListener("scroll", updateVisibility, { passive: true });
+    window.addEventListener("resize", updateVisibility);
+
     return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
+      window.removeEventListener("scroll", updateVisibility);
+      window.removeEventListener("resize", updateVisibility);
     };
   }, []);
 
-  if (!testimonials || testimonials.length === 0) return null;
+  useEffect(() => {
+    if (!isInView || testimonials.length < 2) return;
 
-  const displayed = animating && prevIndex !== null ? testimonials[prevIndex] : testimonials[activeIndex];
+    const interval = window.setInterval(() => {
+      setActiveIndex((currentIndex) => (currentIndex + 1) % testimonials.length);
+    }, 4500);
+
+    return () => window.clearInterval(interval);
+  }, [isInView, testimonials.length]);
+
+  if (testimonials.length === 0) return null;
+
+  const selectTestimonial = (index: number) => {
+    if (index === activeIndex) return;
+    setActiveIndex(index);
+    const track = trackRef.current;
+    const activeAvatar = track?.querySelector<HTMLElement>(`[data-index="${index}"]`);
+    if (!track || !activeAvatar) return;
+
+    const trackRect = track.getBoundingClientRect();
+    const activeRect = activeAvatar.getBoundingClientRect();
+    const nextLeft = track.scrollLeft + (activeRect.left - trackRect.left) - (trackRect.width - activeRect.width) / 2;
+    track.scrollTo({ left: Math.max(0, nextLeft), behavior: "smooth" });
+  };
+
+  const handleAvatarKeyDown = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
+    if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
+    event.preventDefault();
+    const direction = event.key === "ArrowRight" ? 1 : -1;
+    const nextIndex = (index + direction + testimonials.length) % testimonials.length;
+    selectTestimonial(nextIndex);
+    const nextButton = trackRef.current?.querySelector<HTMLButtonElement>(`[data-index="${nextIndex}"]`);
+    nextButton?.focus();
+  };
+
+  const activeTestimonial = testimonials[activeIndex];
 
   return (
-    <section
-      id="testimonials"
-      aria-label="Testimonials"
-      className="py-[var(--spacing-section-mobile)] md:py-[var(--spacing-section)]"
-    >
-      {/* Section label — Option D: whisper-level, all-lowercase, muted, tracked */}
-      <p
-        aria-hidden="true"
-        className="text-[length:var(--text-body-l)] font-[number:var(--font-weight-regular)] text-[var(--color-text-muted)] tracking-[0.08em] lowercase mb-[var(--spacing-8)] md:mb-[var(--spacing-9)] select-none"
-      >
+    <section ref={sectionRef} id="testimonials" aria-label="Testimonials" aria-labelledby="testimonials-heading" className="py-[var(--spacing-section-mobile)] md:py-[var(--spacing-section)]">
+      <p id="testimonials-heading" className="mb-[var(--spacing-8)] text-[length:var(--text-body-l)] font-[number:var(--font-weight-regular)] tracking-[0.08em] text-[var(--color-text-muted)] lowercase md:mb-[var(--spacing-9)]">
         nice things great persons said about me
       </p>
 
-      {/* Quote stage */}
       <div className="flex flex-col items-center text-center">
-        {/* Quote text with CSS fade+drift transition */}
-        <div className="relative w-full min-h-[8rem] md:min-h-[6rem] flex items-center justify-center mb-[var(--spacing-6)]">
-          <blockquote
-            key={activeIndex}
-            className={[
-              "max-w-3xl mx-auto",
-              "text-[length:var(--text-quote)] md:text-[length:var(--text-heading-h2)]",
-              "leading-[1.25] font-[number:var(--font-weight-regular)]",
-              "tracking-[var(--tracking-tight-heading)]",
-              "text-[var(--color-text-primary)]",
-              animating
-                ? "opacity-0 translate-y-2 transition-none"
-                : "opacity-100 translate-y-0 transition-all duration-400 ease-in-out",
-            ].join(" ")}
-            aria-live="polite"
-          >
-            &ldquo;{displayed.quote}&rdquo;
+        <div className="relative mb-[var(--spacing-6)] flex min-h-[var(--spacing-10)] w-full items-center justify-center md:min-h-[var(--spacing-9)]">
+          <blockquote className="mx-auto max-w-3xl text-[length:var(--text-quote)] font-[number:var(--font-weight-regular)] leading-[var(--text-quote--line-height)] tracking-[var(--tracking-tight-heading)] text-[var(--color-text-primary)] transition-[opacity,transform] duration-200 ease-out md:text-[length:var(--text-heading-h2)]" aria-live="polite">
+            &ldquo;{activeTestimonial.quote}&rdquo;
           </blockquote>
         </div>
 
-        {/* Author details */}
-        <div
-          key={`author-${activeIndex}`}
-          className={[
-            "flex flex-col items-center gap-[var(--spacing-1)] mb-[var(--spacing-8)]",
-            animating
-              ? "opacity-0 translate-y-1 transition-none"
-              : "opacity-100 translate-y-0 transition-all duration-400 ease-in-out",
-          ].join(" ")}
-        >
+        <div className="mb-[var(--spacing-8)] flex flex-col items-center gap-[var(--spacing-1)] transition-[opacity,transform] duration-200 ease-out">
           <span className="text-[length:var(--text-body-m)] font-[number:var(--font-weight-semibold)] text-[var(--color-text-primary)]">
-            {displayed.name}
+            {activeTestimonial.name}
           </span>
-          <span className="text-[length:var(--text-label)] font-[number:var(--font-weight-medium)] text-[var(--color-text-muted)] tracking-[0.04em]">
-            {displayed.role} · {displayed.company}
+          <span className="text-[length:var(--text-label)] font-[number:var(--font-weight-medium)] tracking-[0.04em] text-[var(--color-text-muted)]">
+            {activeTestimonial.role} · {activeTestimonial.company}
           </span>
         </div>
 
-        {/* Avatar track — horizontally scrollable when overflowing, centered when small */}
-        <div className="w-full max-w-xl px-4 flex justify-center">
+        <div className="relative w-full max-w-xl px-[var(--spacing-4)]">
+          <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 left-0 z-10" style={{ width: "var(--spacing-8)", background: "linear-gradient(to right, var(--color-background-default), rgba(255,255,255,0))" }} />
+          <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 right-0 z-10" style={{ width: "var(--spacing-8)", background: "linear-gradient(to left, var(--color-background-default), rgba(255,255,255,0))" }} />
           <div
             ref={trackRef}
             role="tablist"
             aria-label="Select testimonial"
-            className="flex items-center justify-start sm:justify-center gap-[var(--spacing-4)] overflow-x-auto py-2 px-3 max-w-full scroll-smooth [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+            className="overflow-x-auto px-[var(--spacing-8)] py-[var(--spacing-2)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            style={{ scrollSnapType: "x mandatory" }}
           >
-            {testimonials.map((t, idx) => {
-              const isActive = idx === activeIndex;
-              return (
-                <button
-                  key={t.name}
-                  data-index={idx}
-                  role="tab"
-                  aria-selected={isActive}
-                  aria-label={`Show testimonial from ${t.name}`}
-                  onClick={() => goTo(idx)}
-                  className={[
-                    "shrink-0 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent-primary)] focus-visible:ring-offset-2 cursor-pointer",
-                    "transition-all duration-300 ease-in-out",
-                    isActive
-                      ? "ring-2 ring-[var(--color-border-default)] ring-offset-2 scale-110 opacity-100"
-                      : "opacity-50 scale-95 grayscale hover:opacity-75 hover:scale-100",
-                  ].join(" ")}
-                >
-                  <Image
-                    src={t.avatarUrl}
-                    alt={t.name}
-                    width={48}
-                    height={48}
-                    className="rounded-full w-12 h-12 object-cover pointer-events-none"
-                    unoptimized
-                  />
-                </button>
-              );
-            })}
+            <div className="flex min-w-full items-center justify-center gap-[var(--spacing-4)]">
+              {testimonials.map((testimonial, index) => {
+                const isActive = index === activeIndex;
+                return (
+                  <button
+                    key={`${testimonial.name}-${index}`}
+                    data-index={index}
+                    type="button"
+                    role="tab"
+                    aria-selected={isActive}
+                    aria-label={`Show testimonial from ${testimonial.name}`}
+                    onClick={() => selectTestimonial(index)}
+                    onKeyDown={(event) => handleAvatarKeyDown(event, index)}
+                    className={`shrink-0 rounded-full outline-none transition-[opacity,transform,filter,box-shadow] duration-200 ease-out focus-visible:ring-2 focus-visible:ring-[var(--color-accent-primary)] focus-visible:ring-offset-2 ${isActive ? "scale-110 opacity-100 ring-2 ring-[var(--color-border-default)] ring-offset-2" : "scale-95 grayscale opacity-50 hover:scale-100 hover:opacity-75"}`}
+                    style={{ scrollSnapAlign: "center" }}
+                  >
+                    <Image src={testimonial.avatarUrl} alt="" width={48} height={48} loading="lazy" unoptimized className="size-12 rounded-full object-cover" />
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>

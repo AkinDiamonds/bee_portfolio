@@ -10,7 +10,7 @@ export default function Footer() {
     <footer className={styles.footer}>
       <div className={styles.metaRow}>
         <p className={styles.quote}>
-          &ldquo;This site is haunted by a bee. It&apos;s not a bug, it&apos;s the most important feature.&rdquo;
+          This site is haunted by a bee. It&apos;s not a bug, it&apos;s the most important feature.
         </p>
 
         <nav className={styles.socialLinks} aria-label="Social links">

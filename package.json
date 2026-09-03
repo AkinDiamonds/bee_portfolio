@@ -9,6 +9,9 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@rive-app/react-canvas": "^4.34.0",
+    "firebase": "^12.18.0",
+    "framer-motion": "^13.2.0",
     "lucide-react": "^1.37.0",
     "next": "16.3.3",
     "react": "19.2.8",

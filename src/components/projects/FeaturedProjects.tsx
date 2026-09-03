@@ -6,6 +6,7 @@ export default function FeaturedProjects() {
 
   return (
     <section
+      id="featured-projects"
       aria-label="Featured Projects"
       className="py-[var(--spacing-section-mobile)] md:py-[var(--spacing-section)]"
     >

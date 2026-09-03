@@ -150,6 +150,16 @@
   --radius-lg: 1.25rem;
   --radius-pill: 999px;
 
+  /* AGENT / CHAT */
+  --size-agent-desktop: 8rem;    /* 128px */
+  --size-agent-mobile: 3.25rem;  /* ~52px */
+  --size-agent-footer: 6rem;     /* 96px — sized to fit inside the O hollow */
+  --size-agent-dialog: 28rem;
+  --z-agent: 40;
+  --z-agent-dialogue: 45;
+  --z-agent-modal: 50;
+  --z-agent-above-modal: 60;
+
   /* LAYOUT */
   --container-portfolio: 75rem; /* 1200px */
 

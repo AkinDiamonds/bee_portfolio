@@ -1,0 +1,69 @@
+{
+  "hero": [
+    {
+      "text": "Hey there! I'm your interactive portfolio guide. Click or drag me anywhere!"
+    }
+  ],
+  "projects": [
+    {
+      "text": "Simeon builds high-performance interfaces and real-time systems. Take a look at Tourist AI!",
+      "action": {
+        "label": "Explore Tourist AI",
+        "href": "/projects/tourist-ai"
+      }
+    },
+    {
+      "text": "Curious how these are architected? Notice the clean data layer and zero-lag streaming."
+    }
+  ],
+  "experience": [
+    {
+      "text": "5+ years crafting software across Amazon, Stanford, and high-velocity product teams."
+    },
+    {
+      "text": "Notice the transition from user research to production distributed systems."
+    }
+  ],
+  "testimonials": [
+    {
+      "text": "Real feedback from engineering and product leaders Simeon has collaborated with."
+    },
+    {
+      "text": "Every recommendation highlights both product delivery velocity and thoughtful systems design."
+    }
+  ],
+  "technologies": [
+    {
+      "text": "A modern engineering stack spanning React, Next.js, Node.js, and generative AI pipelines."
+    },
+    {
+      "text": "Hover over any technology above to see the interactive micro-details."
+    }
+  ],
+  "blog": [
+    {
+      "text": "Technical deep-dives into architecture, AI engineering latency, and frontend craft.",
+      "action": {
+        "label": "Read all posts",
+        "href": "/blog"
+      }
+    }
+  ],
+  "footer": [
+    {
+      "text": "You made it to the bottom! Simeon is open to ambitious engineering opportunities.",
+      "action": {
+        "label": "Say hello",
+        "href": "mailto:simeonakinrinola7@gmail.com"
+      }
+    },
+    {
+      "text": "The cat sees everything. Feel free to click me anytime to chat."
+    }
+  ],
+  "tapReaction": [
+    {
+      "text": "Meow! Opening chat agent..."
+    }
+  ]
+}

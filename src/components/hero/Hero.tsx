@@ -4,6 +4,7 @@ import Link from "next/link";
 export default function Hero() {
   return (
     <section
+      id="hero"
       aria-label="Hero Introduction"
       className="relative min-h-[calc(100svh-var(--spacing-8))] flex flex-col justify-center items-center text-center px-[var(--spacing-5)] py-[var(--spacing-8)] overflow-hidden"
     >

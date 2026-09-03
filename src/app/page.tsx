@@ -6,6 +6,7 @@ import Testimonials from "@/components/testimonials/Testimonials";
 import TechStack from "@/components/tech/TechStack";
 import LatestBlogs from "@/components/blog/LatestBlogs";
 import Footer from "@/components/footer/Footer";
+import PortfolioAgent from "@/components/agent/PortfolioAgent";
 import { getTestimonials, getTechStack, getBlogPosts } from "@/lib/content";
 
 export default function Home() {
@@ -25,6 +26,7 @@ export default function Home() {
         <LatestBlogs posts={blogPosts} />
         <Footer />
       </main>
+      <PortfolioAgent />
     </div>
   );
 }

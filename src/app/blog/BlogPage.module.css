@@ -1,0 +1,121 @@
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  color: var(--color-text-primary);
+  background: var(--color-background-default);
+}
+
+.main {
+  width: 100%;
+  max-width: var(--container-portfolio);
+  flex: 1;
+  margin-inline: auto;
+  padding: var(--spacing-section-mobile) var(--spacing-5);
+}
+
+.title {
+  margin: 0 0 var(--spacing-8);
+  font-size: var(--text-heading-h1);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--text-heading-h1--line-height);
+  letter-spacing: var(--tracking-tight-heading);
+}
+
+.list {
+  display: grid;
+  gap: var(--spacing-8);
+}
+
+.post {
+  max-width: 52rem;
+}
+
+.meta {
+  margin: 0 0 var(--spacing-2);
+  color: var(--color-text-muted);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: var(--text-caption);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--text-caption--line-height);
+}
+
+.postTitle {
+  margin: 0;
+  font-size: var(--text-heading-h3);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--text-heading-h3--line-height);
+  letter-spacing: var(--tracking-tight-heading);
+}
+
+.postTitle a,
+.readLink,
+.backLink {
+  color: inherit;
+  text-decoration: none;
+}
+
+.postTitle a:hover,
+.readLink:hover,
+.backLink:hover {
+  text-decoration: underline;
+  text-underline-offset: var(--spacing-1);
+}
+
+.excerpt {
+  margin: var(--spacing-3) 0 var(--spacing-4);
+  color: var(--color-text-secondary);
+  font-size: var(--text-body-m);
+  line-height: var(--text-body-m--line-height);
+}
+
+.readLink,
+.backLink {
+  font-size: var(--text-label);
+  font-weight: var(--font-weight-medium);
+}
+
+.backLink {
+  display: inline-block;
+  margin-bottom: var(--spacing-8);
+  color: var(--color-text-muted);
+}
+
+.article {
+  max-width: 46rem;
+}
+
+.articleTitle {
+  margin: 0 0 var(--spacing-6);
+  font-size: var(--text-heading-h1);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--text-heading-h1--line-height);
+  letter-spacing: var(--tracking-tight-heading);
+}
+
+.content {
+  color: var(--color-text-secondary);
+  font-size: var(--text-body-l);
+  line-height: var(--text-body-l--line-height);
+}
+
+.content p {
+  margin: 0 0 var(--spacing-5);
+}
+
+.postTitle a:focus-visible,
+.readLink:focus-visible,
+.backLink:focus-visible {
+  outline: var(--border-width-hairline) solid var(--color-text-primary);
+  outline-offset: var(--spacing-1);
+}
+
+@media (min-width: 48rem) {
+  .main {
+    padding: var(--spacing-section) var(--spacing-8);
+  }
+
+  .list {
+    gap: var(--spacing-9);
+  }
+}

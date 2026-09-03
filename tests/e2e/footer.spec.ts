@@ -22,7 +22,7 @@ test.describe('Footer Section', () => {
     await expect(github).toHaveAttribute('href', 'https://github.com/AkinDiamonds');
     await expect(email).toHaveAttribute('href', 'mailto:simeonakinrinola7@gmail.com');
 
-    // Verify the accessible wordmark and inert O landing handoff.
+    // Verify the accessible wordmark and bee landing handoff.
     await expect(footer).toContainText(/Simeon Akinrinola. All rights reserved/i);
     await expect(footer.locator('#bee-playground')).toBeAttached();
     await expect(footer.locator('#bee-playground')).toContainText('SIMEON.');

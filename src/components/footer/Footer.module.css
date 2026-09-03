@@ -76,6 +76,7 @@
   display: inline-block;
   min-inline-size: var(--spacing-7);
   text-align: center;
+  line-height: inherit;
 }
 
 .period {

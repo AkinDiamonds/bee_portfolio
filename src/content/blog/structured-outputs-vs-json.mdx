@@ -1,0 +1,18 @@
+---
+title: "Structured Outputs vs. JSON"
+slug: "structured-outputs-vs-json"
+date: "2026-09-03"
+category: "AI Engineering"
+excerpt: "JSON is a format. Structured outputs are a reliability contract: shape, types, and constraints that downstream code can trust."
+coverImage: ""
+---
+
+JSON is excellent for moving data between systems. It tells us how a payload is written, but it does not guarantee that a model will return the shape our application expects. A response can be valid JSON and still be unhelpful: a field can be missing, a value can use the wrong type, or a key can be named almost correctly.
+
+Structured outputs move the agreement closer to the generation step. Instead of asking for “some JSON,” an application supplies a schema that describes required fields, allowed values, nesting, and types. The model is then guided to produce data that can be parsed directly into that contract.
+
+That difference matters most at the boundary between language and code. A product can render a flexible text answer for a person, but an automated workflow needs predictable inputs. If the next step creates a ticket, updates a record, or calls a tool, a schema makes failure visible early and keeps the execution path deterministic.
+
+The practical rule is simple. Use ordinary JSON when flexibility is the feature and a human or tolerant parser can review it. Use structured outputs when another system must act on the result. The schema is not a substitute for validation, authorization, or business rules; it is the first guardrail that makes those later checks straightforward.
+
+For agent systems, this often means separating the conversational layer from the operational layer. The assistant may explain its reasoning in readable language, while its tool calls and state updates travel through small, typed contracts. The result is less prompt glue, fewer defensive parsing branches, and an interface that is easier to evolve.

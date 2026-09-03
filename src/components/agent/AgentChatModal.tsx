@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { X } from "lucide-react";
+import { ArrowUp, X } from "lucide-react";
 import styles from "./AgentChatModal.module.css";
 
 interface AgentChatModalProps {
@@ -93,6 +93,9 @@ export default function AgentChatModal({ isOpen, onClose }: AgentChatModalProps)
             placeholder="Write a message"
             autoComplete="off"
           />
+          <button type="submit" className={styles.sendButton} aria-label="Send message">
+            <ArrowUp aria-hidden="true" />
+          </button>
         </form>
       </div>
     </div>

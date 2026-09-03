@@ -74,6 +74,11 @@
   border-bottom: var(--border-width-hairline) solid var(--color-border-default);
 }
 
+.form { display: flex; align-items: center; gap: var(--spacing-2); }
+.sendButton { display: inline-flex; align-items: center; justify-content: center; width: var(--spacing-7); height: var(--spacing-7); color: var(--color-action-secondary); background: var(--color-action-primary); border-radius: var(--radius-pill); }
+.sendButton svg { width: var(--spacing-4); height: var(--spacing-4); }
+.sendButton:focus-visible { outline: var(--border-width-hairline) solid var(--color-text-primary); outline-offset: var(--spacing-1); }
+
 .form input::placeholder {
   color: var(--color-text-muted);
 }

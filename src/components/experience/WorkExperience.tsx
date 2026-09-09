@@ -1,9 +1,12 @@
 import React from "react";
-import { getExperience, formatExperiencePeriod } from "@/lib/content";
+import type { ExperienceDoc } from "@/lib/types";
+import { formatExperiencePeriod } from "@/lib/firestore";
 
-export default function WorkExperience() {
-  const experiences = getExperience();
+interface WorkExperienceProps {
+  experience: ExperienceDoc[];
+}
 
+export default function WorkExperience({ experience }: WorkExperienceProps) {
   return (
     <section
       id="experience"
@@ -15,7 +18,7 @@ export default function WorkExperience() {
       </h2>
 
       <ul role="list" className="w-full">
-        {experiences.map((item, idx) => (
+        {experience.map((item, idx) => (
           <li
             key={`${item.company}-${item.role}-${idx}`}
             className="border-b border-[var(--color-border-default)] py-[var(--spacing-4)] md:py-[var(--spacing-5)] transition-colors hover:bg-[var(--color-background-subtle)]/50"

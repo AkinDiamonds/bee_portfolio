@@ -1,3 +1,114 @@
+# plan_05 — Admin UI Shell (Tabbed Layout + Auth Context)
+
+**Goal:** Replace the raw-JSON `AdminDashboard.tsx` with a polished, mobile-friendly tabbed shell. Add an `AdminAuthContext` so child forms can read credentials without prop-drilling. Build the tab containers as empty stubs (the actual form content goes in plans 06–11).
+
+**Prerequisite:** plan_03 complete.
+
+---
+
+## Files to create / modify
+
+| Action | File |
+|---|---|
+| REPLACE | `src/app/admin/AdminDashboard.tsx` |
+| CREATE | `src/app/admin/AdminAuthContext.tsx` |
+| CREATE | `src/app/admin/tabs/SiteDataTab.tsx` (stub) |
+| CREATE | `src/app/admin/tabs/BlogTab.tsx` (stub) |
+
+---
+
+## Step 1 — Create `src/app/admin/AdminAuthContext.tsx`
+
+This context stores the Basic Auth credentials entered at login. Every form reads from it to attach the Authorization header to API calls.
+
+```tsx
+// src/app/admin/AdminAuthContext.tsx
+"use client";
+
+import { createContext, useContext, useState, type ReactNode } from "react";
+
+interface AdminAuthCtx {
+  username: string;
+  password: string;
+  authHeader: string; // precomputed "Basic xxx" value
+}
+
+const AdminAuthContext = createContext<AdminAuthCtx>({
+  username: "",
+  password: "",
+  authHeader: "",
+});
+
+export function useAdminAuth() {
+  return useContext(AdminAuthContext);
+}
+
+interface AdminAuthProviderProps {
+  username: string;
+  password: string;
+  children: ReactNode;
+}
+
+export function AdminAuthProvider({ username, password, children }: AdminAuthProviderProps) {
+  const authHeader = `Basic ${btoa(`${username}:${password}`)}`;
+  return (
+    <AdminAuthContext.Provider value={{ username, password, authHeader }}>
+      {children}
+    </AdminAuthContext.Provider>
+  );
+}
+```
+
+---
+
+## Step 2 — Create stub `src/app/admin/tabs/SiteDataTab.tsx`
+
+```tsx
+// src/app/admin/tabs/SiteDataTab.tsx
+"use client";
+
+export default function SiteDataTab() {
+  return (
+    <div className="py-[var(--spacing-6)]">
+      <p className="text-[length:var(--text-body-s)] text-[var(--color-text-muted)]">
+        Site data forms load here. (plans 06–10)
+      </p>
+    </div>
+  );
+}
+```
+
+---
+
+## Step 3 — Create stub `src/app/admin/tabs/BlogTab.tsx`
+
+```tsx
+// src/app/admin/tabs/BlogTab.tsx
+"use client";
+
+export default function BlogTab() {
+  return (
+    <div className="py-[var(--spacing-6)]">
+      <p className="text-[length:var(--text-body-s)] text-[var(--color-text-muted)]">
+        Blog editor loads here. (plan 11)
+      </p>
+    </div>
+  );
+}
+```
+
+---
+
+## Step 4 — Replace `src/app/admin/AdminDashboard.tsx`
+
+Delete all existing content and replace with the tabbed shell below.
+
+The component:
+1. Shows a login form if credentials are not yet entered.
+2. Verifies credentials by calling `GET /api/admin/site` and checking the response (401 = wrong password, 200 = correct).
+3. On success, wraps the tabs in `AdminAuthProvider` and shows two tabs.
+
+```tsx
 // src/app/admin/AdminDashboard.tsx
 "use client";
 
@@ -172,3 +283,39 @@ export default function AdminDashboard() {
     </AdminAuthProvider>
   );
 }
+```
+
+---
+
+## Verification
+
+Navigate to `http://localhost:3000/admin` in your browser.
+
+Expected behavior:
+1. Login form appears with Username and Password fields.
+2. Enter the credentials from `.env.local` (`Simeon` / `Simeon` by default) — click Sign in.
+3. After a moment, the tabbed admin layout appears with "Site Data" and "Blog" tabs.
+4. Clicking each tab switches the panel.
+5. Entering wrong credentials shows the error message.
+
+Then run:
+
+```bash
+npm run build
+npm run lint
+npx tsc --noEmit
+```
+
+---
+
+## Done checklist
+
+- [ ] `AdminAuthContext.tsx` created with `useAdminAuth` hook and `AdminAuthProvider`
+- [ ] `tabs/SiteDataTab.tsx` created (stub)
+- [ ] `tabs/BlogTab.tsx` created (stub)
+- [ ] `AdminDashboard.tsx` replaced with tabbed shell + login form
+- [ ] Login form works: correct credentials → tabs shown, wrong credentials → error shown
+- [ ] Tab switching works
+- [ ] `npm run build` passes
+- [ ] `npm run lint` passes
+- [ ] `npx tsc --noEmit` passes

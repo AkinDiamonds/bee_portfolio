@@ -1,9 +1,11 @@
-import { getProjects } from "@/lib/content";
+import type { ProjectDoc } from "@/lib/types";
 import { ProjectCard } from "./ProjectCard";
 
-export default function FeaturedProjects() {
-  const projects = getProjects();
+interface FeaturedProjectsProps {
+  projects: ProjectDoc[];
+}
 
+export default function FeaturedProjects({ projects }: FeaturedProjectsProps) {
   return (
     <section
       id="featured-projects"

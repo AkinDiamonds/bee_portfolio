@@ -3,10 +3,10 @@
 import { useRef, useState, useEffect } from "react";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { BlogPostData } from "@/lib/content";
+import type { BlogPostDoc } from "@/lib/types";
 
 interface LatestBlogsProps {
-  posts: BlogPostData[];
+  posts: BlogPostDoc[];
 }
 
 export default function LatestBlogs({ posts }: LatestBlogsProps) {
@@ -89,7 +89,7 @@ export default function LatestBlogs({ posts }: LatestBlogsProps) {
                 {post.title}
               </h3>
               <p className="mt-2 text-[length:var(--text-caption)] text-[var(--color-text-muted)] font-[number:var(--font-weight-medium)]">
-                {post.date} {post.category ? `· ${post.category}` : ""}
+                {post.publishedAt} {post.category ? `· ${post.category}` : ""}
               </p>
               <div className="mt-3">
                 <Link

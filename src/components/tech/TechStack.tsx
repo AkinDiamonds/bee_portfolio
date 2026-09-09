@@ -1,7 +1,7 @@
-import { TechCategory } from "@/lib/content";
+import type { TechCategoryDoc } from "@/lib/types";
 
 interface TechStackProps {
-  techStack: TechCategory[];
+  techStack: TechCategoryDoc[];
 }
 
 export default function TechStack({ techStack }: TechStackProps) {

@@ -2,10 +2,10 @@
 
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import Image from "next/image";
-import { TestimonialItem } from "@/lib/content";
+import type { TestimonialDoc } from "@/lib/types";
 
 interface TestimonialsProps {
-  testimonials: TestimonialItem[];
+  testimonials: TestimonialDoc[];
 }
 
 export default function Testimonials({ testimonials }: TestimonialsProps) {
@@ -119,7 +119,13 @@ export default function Testimonials({ testimonials }: TestimonialsProps) {
                     className={`shrink-0 rounded-full outline-none transition-[opacity,transform,filter,box-shadow] duration-200 ease-out focus-visible:ring-2 focus-visible:ring-[var(--color-accent-primary)] focus-visible:ring-offset-2 ${isActive ? "scale-110 opacity-100 ring-2 ring-[var(--color-border-default)] ring-offset-2" : "scale-95 grayscale opacity-50 hover:scale-100 hover:opacity-75"}`}
                     style={{ scrollSnapAlign: "center" }}
                   >
-                    <Image src={testimonial.avatarUrl} alt="" width={48} height={48} loading="lazy" unoptimized className="size-12 rounded-full object-cover" />
+                    {testimonial.avatarUrl ? (
+                      <Image src={testimonial.avatarUrl} alt="" width={48} height={48} loading="lazy" unoptimized className="size-12 rounded-full object-cover" />
+                    ) : (
+                      <div className="size-12 rounded-full bg-[var(--color-neutral-200)] flex items-center justify-center font-medium text-xs text-[var(--color-text-primary)]">
+                        {testimonial.name ? testimonial.name.charAt(0) : "?"}
+                      </div>
+                    )}
                   </button>
                 );
               })}

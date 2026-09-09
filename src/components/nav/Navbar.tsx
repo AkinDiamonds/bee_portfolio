@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { ChevronDown, ExternalLink, Download, Copy, Check } from "lucide-react";
+import type { SiteProfile } from "@/lib/types";
 
 interface ContactLink {
   label: string;
@@ -13,17 +14,23 @@ interface ContactLink {
   copyValue?: string;
 }
 
-const contactLinks: ContactLink[] = [
-  { label: "GitHub", href: "https://github.com/AkinDiamonds", external: true },
-  { label: "LinkedIn", href: "https://linkedin.com/in/simeon-akinrinola", external: true },
-  { label: "WhatsApp", href: "https://wa.me/+2349065979423", external: true },
-  { label: "Email", href: "mailto:simeonakinrinola7@gmail.com" },
-  { label: "Schedule a meeting", href: "https://cal.com/TODO", external: true },
-  { label: "Phone", isCopy: true, copyValue: "+2349065979423" },
-  { label: "Download Resume", href: "/resume.pdf", isDownload: true },
-];
+function buildContactLinks(profile: SiteProfile | null): ContactLink[] {
+  return [
+    { label: "GitHub", href: profile?.githubUrl || "https://github.com/AkinDiamonds", external: true },
+    { label: "LinkedIn", href: profile?.linkedinUrl || "https://linkedin.com/in/simeon-akinrinola", external: true },
+    { label: "WhatsApp", href: profile?.whatsappUrl || "https://wa.me/+2349065979423", external: true },
+    { label: "Email", href: `mailto:${profile?.email || "simeonakinrinola7@gmail.com"}` },
+    { label: "Schedule a meeting", href: profile?.calUrl || "https://cal.com/TODO", external: true },
+    { label: "Phone", isCopy: true, copyValue: profile?.phone || "+2349065979423" },
+    { label: "Download Résumé", href: profile?.resumeUrl || "/resume.pdf", isDownload: true },
+  ];
+}
 
-export default function Navbar() {
+interface NavbarProps {
+  profile: SiteProfile | null;
+}
+
+export default function Navbar({ profile }: NavbarProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [copied, setCopied] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -31,6 +38,13 @@ export default function Navbar() {
   const [isVisible, setIsVisible] = useState(true);
   const lastScrollY = useRef(0);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const contactLinks = buildContactLinks(profile);
+
+  const firstName = profile?.heroName?.trim() ? profile.heroName.split(" ")[0] : "Simeon";
+  const lastName = profile?.heroName?.trim() && profile.heroName.split(" ").length > 1
+    ? profile.heroName.split(" ").slice(1).join(" ")
+    : "Akinrinola";
 
   const handleCopy = (value: string) => {
     navigator.clipboard.writeText(value);
@@ -81,7 +95,7 @@ export default function Navbar() {
           className="text-[16px] font-[number:var(--font-weight-bold)] text-[var(--color-text-primary)] tracking-[var(--tracking-tight-heading)] rounded-[var(--radius-sm)] transition-opacity hover:opacity-80 z-50"
           aria-label="Home"
         >
-          Simeon <span className="font-normal opacity-80">Akinrinola</span>
+          {firstName} <span className="font-normal opacity-80">{lastName}</span>
         </Link>
 
         {/* Desktop Nav */}

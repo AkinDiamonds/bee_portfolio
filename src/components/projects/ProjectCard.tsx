@@ -3,10 +3,10 @@
 import { useState, useEffect, useRef } from "react";
 import { ArrowUpRight, ChevronDownIcon, ArrowLeft, ExternalLink } from "lucide-react";
 import { SiGithub } from "react-icons/si";
-import { ProjectData } from "@/lib/content";
+import type { ProjectDoc } from "@/lib/types";
 
 interface ProjectCardProps {
-  project: ProjectData;
+  project: ProjectDoc;
   index: number;
 }
 
@@ -205,18 +205,19 @@ export function ProjectCard({ project }: ProjectCardProps) {
 
           {/* Inner Stage: Centered horizontally, spaced at top, flush to bottom */}
           <div className="absolute top-8 md:top-10 lg:top-12 left-4 right-4 md:left-5 md:right-5 lg:left-5 lg:right-5 bottom-0 rounded-t-2xl md:rounded-t-3xl bg-[var(--color-neutral-100)] border-t border-x border-gray-200 shadow-[0_12px_32px_rgba(0,0,0,0.06)] overflow-hidden flex flex-col">
-            {project.demoVideo ? (
+            {project.demoType === "video" && project.demoUrl ? (
               <video
-                src={project.demoVideo}
+                src={project.demoUrl}
+                autoPlay
                 muted
+                loop
                 playsInline
-                controls
                 className="w-full h-full object-cover object-top"
               />
-            ) : project.demoImage ? (
+            ) : project.demoUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
-                src={project.demoImage}
+                src={project.demoUrl}
                 alt={project.title}
                 className="w-full h-full object-cover object-top"
               />

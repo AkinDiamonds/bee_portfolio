@@ -2,20 +2,28 @@ import { Mail } from "lucide-react";
 import { FaLinkedin } from "react-icons/fa";
 import { SiGithub } from "react-icons/si";
 import styles from "./Footer.module.css";
+import type { SiteProfile } from "@/lib/types";
 
-export default function Footer() {
+interface FooterProps {
+  profile: SiteProfile | null;
+}
+
+export default function Footer({ profile }: FooterProps) {
   const currentYear = new Date().getFullYear();
+  const quote = profile?.footerQuote || "This site is haunted by a bee. It\u2019s not a bug, it\u2019s the most important feature.";
+  const github = profile?.githubUrl || "https://github.com/AkinDiamonds";
+  const linkedin = profile?.linkedinUrl || "https://linkedin.com/in/simeon-akinrinola";
+  const email = profile?.email ? `mailto:${profile.email}` : "mailto:simeonakinrinola7@gmail.com";
+  const name = profile?.heroName || "Simeon Akinrinola";
+  const firstName = name.trim() ? name.split(" ")[0] : "Simeon";
 
   return (
     <footer className={styles.footer}>
       <div className={styles.metaRow}>
-        <p className={styles.quote}>
-          This site is haunted by a bee. It&apos;s not a bug, it&apos;s the most important feature.
-        </p>
-
+        <p className={styles.quote}>{quote}</p>
         <nav className={styles.socialLinks} aria-label="Social links">
           <a
-            href="https://linkedin.com/in/simeon-akinrinola"
+            href={linkedin}
             target="_blank"
             rel="noopener noreferrer"
             aria-label="LinkedIn profile"
@@ -24,7 +32,7 @@ export default function Footer() {
             <FaLinkedin aria-hidden="true" />
           </a>
           <a
-            href="https://github.com/AkinDiamonds"
+            href={github}
             target="_blank"
             rel="noopener noreferrer"
             aria-label="GitHub profile"
@@ -33,8 +41,8 @@ export default function Footer() {
             <SiGithub aria-hidden="true" />
           </a>
           <a
-            href="mailto:simeonakinrinola7@gmail.com"
-            aria-label="Email Simeon Akinrinola"
+            href={email}
+            aria-label={`Email ${name}`}
             className={styles.socialLink}
           >
             <Mail aria-hidden="true" />
@@ -43,17 +51,9 @@ export default function Footer() {
       </div>
 
       <div id="bee-playground" className={styles.wordmarkStage}>
-        <span className={styles.srOnly}>Simeon.</span>
+        <span className={styles.srOnly}>{firstName}.</span>
         <span className={styles.wordmark} aria-hidden="true">
-          <span>SIME</span>
-          <span
-            id="bee-landing-pad"
-            data-bee-landing-zone="center"
-            className={styles.landingPad}
-          >
-            O
-          </span>
-          <span>N</span>
+          <span>{firstName.toUpperCase()}</span>
           <span className={styles.period} data-bee-accent="true">
             .
           </span>
@@ -61,7 +61,7 @@ export default function Footer() {
       </div>
 
       <div className={styles.bottomRow}>
-        <p>© {currentYear} Simeon Akinrinola. All rights reserved.</p>
+        <p>© {currentYear} {name}. All rights reserved.</p>
       </div>
     </footer>
   );

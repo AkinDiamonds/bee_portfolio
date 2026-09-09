@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import Navbar from "@/components/nav/Navbar";
 import { getBlogPostBySlug, getSiteProfile } from "@/lib/firestore";
+import sanitizeHtml from "sanitize-html";
 import styles from "../BlogPage.module.css";
 
 interface BlogPostPageProps {
@@ -14,7 +15,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   const post = await getBlogPostBySlug(slug);
   if (!post) return {};
   return {
-    title: post.title,
+    title: `${post.title} — Simeon Akinrinola`,
     description: post.excerpt,
     openGraph: { title: post.title, description: post.excerpt, type: "article" },
   };
@@ -29,6 +30,26 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   if (!post || !post.visibility) notFound();
 
+  const safeBody = sanitizeHtml(post.body || "", {
+    allowedTags: sanitizeHtml.defaults.allowedTags.concat([
+      "h1",
+      "h2",
+      "h3",
+      "u",
+      "mark",
+      "pre",
+      "code",
+      "img",
+      "span",
+    ]),
+    allowedAttributes: {
+      ...sanitizeHtml.defaults.allowedAttributes,
+      "*": ["style", "class"],
+      a: ["href", "target", "rel"],
+      img: ["src", "alt", "width", "height"],
+    },
+  });
+
   return (
     <div className={styles.page}>
       <Navbar profile={profile} />
@@ -39,7 +60,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           <h1 className={styles.articleTitle}>{post.title}</h1>
           <div
             className={styles.content}
-            dangerouslySetInnerHTML={{ __html: post.body }}
+            dangerouslySetInnerHTML={{ __html: safeBody }}
           />
         </article>
       </main>

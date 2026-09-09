@@ -7,6 +7,8 @@ interface TechStackProps {
 export default function TechStack({ techStack }: TechStackProps) {
   if (!techStack || techStack.length === 0) return null;
 
+  const sortedGroups = [...techStack].sort((a, b) => (a.order || 0) - (b.order || 0));
+
   return (
     <section
       id="technologies"
@@ -27,13 +29,13 @@ export default function TechStack({ techStack }: TechStackProps) {
         </h2>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-16">
-          {techStack.map((group) => (
-            <div key={group.category} className="flex flex-col">
+          {sortedGroups.map((group) => (
+            <div key={group.category || group.id} className="flex flex-col">
               <h3 className="text-[length:var(--text-label)] font-mono text-[var(--color-text-muted)] tracking-widest uppercase mb-6 select-none">
                 {group.category}
               </h3>
               <ul role="list" className="flex flex-col space-y-4">
-                {group.items.map((item) => (
+                {(group.items || []).map((item) => (
                   <li
                     key={item}
                     className="text-[length:var(--text-body-l)] font-[number:var(--font-weight-medium)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors duration-200 cursor-default select-none"

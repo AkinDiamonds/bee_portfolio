@@ -4,20 +4,44 @@
 import { useEffect, useState } from "react";
 import { useAdminAuth } from "../AdminAuthContext";
 import ProfileForm from "../forms/ProfileForm";
-import type { SiteProfile } from "@/lib/types";
+import ProjectsForm from "../forms/ProjectsForm";
+import TechForm from "../forms/TechForm";
+import ExperienceForm from "../forms/ExperienceForm";
+import TestimonialsForm from "../forms/TestimonialsForm";
+import type { SiteProfile, ProjectDoc, TechCategoryDoc, ExperienceDoc, TestimonialDoc } from "@/lib/types";
 
 export default function SiteDataTab() {
   const { authHeader } = useAdminAuth();
   const [profile, setProfile] = useState<SiteProfile | null>(null);
+  const [projects, setProjects] = useState<ProjectDoc[]>([]);
+  const [technologies, setTechnologies] = useState<TechCategoryDoc[]>([]);
+  const [experiences, setExperiences] = useState<ExperienceDoc[]>([]);
+  const [testimonials, setTestimonials] = useState<TestimonialDoc[]>([]);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    // Fetch current profile via a public GET — profile is public data
-    fetch("/api/admin/profile-read", { headers: { Authorization: authHeader } })
-      .then((r) => r.json())
-      .then((data: SiteProfile) => setProfile(data))
-      .catch(() => setProfile(null))
-      .finally(() => setLoaded(true));
+    Promise.all([
+      fetch("/api/admin/profile-read", { headers: { Authorization: authHeader } })
+        .then((r) => r.json())
+        .then((data: SiteProfile) => setProfile(data))
+        .catch(() => setProfile(null)),
+      fetch("/api/admin/projects-read", { headers: { Authorization: authHeader } })
+        .then((r) => r.json())
+        .then((data: ProjectDoc[]) => setProjects(Array.isArray(data) ? data : []))
+        .catch(() => setProjects([])),
+      fetch("/api/admin/technologies-read", { headers: { Authorization: authHeader } })
+        .then((r) => r.json())
+        .then((data: TechCategoryDoc[]) => setTechnologies(Array.isArray(data) ? data : []))
+        .catch(() => setTechnologies([])),
+      fetch("/api/admin/experience-read", { headers: { Authorization: authHeader } })
+        .then((r) => r.json())
+        .then((data: ExperienceDoc[]) => setExperiences(Array.isArray(data) ? data : []))
+        .catch(() => setExperiences([])),
+      fetch("/api/admin/testimonials-read", { headers: { Authorization: authHeader } })
+        .then((r) => r.json())
+        .then((data: TestimonialDoc[]) => setTestimonials(Array.isArray(data) ? data : []))
+        .catch(() => setTestimonials([])),
+    ]).finally(() => setLoaded(true));
   }, [authHeader]);
 
   if (!loaded) {
@@ -31,7 +55,10 @@ export default function SiteDataTab() {
   return (
     <div className="py-[var(--spacing-6)] flex flex-col gap-[var(--spacing-9)]">
       <ProfileForm initial={profile} />
-      {/* TechForm, ExperienceForm, TestimonialsForm, ProjectsForm added in plans 07–10 */}
+      <ProjectsForm initial={projects} />
+      <TechForm initial={technologies} />
+      <ExperienceForm initial={experiences} />
+      <TestimonialsForm initial={testimonials} />
     </div>
   );
 }

@@ -7,6 +7,8 @@ interface WorkExperienceProps {
 }
 
 export default function WorkExperience({ experience }: WorkExperienceProps) {
+  if (!experience || experience.length === 0) return null;
+
   return (
     <section
       id="experience"
@@ -20,7 +22,7 @@ export default function WorkExperience({ experience }: WorkExperienceProps) {
       <ul role="list" className="w-full">
         {experience.map((item, idx) => (
           <li
-            key={`${item.company}-${item.role}-${idx}`}
+            key={`${item.company}-${item.role}-${item.id || idx}`}
             className="border-b border-[var(--color-border-default)] py-[var(--spacing-4)] md:py-[var(--spacing-5)] transition-colors hover:bg-[var(--color-background-subtle)]/50"
           >
             {/* Mobile layout (< md) */}

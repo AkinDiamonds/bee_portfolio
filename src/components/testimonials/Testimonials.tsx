@@ -9,6 +9,10 @@ interface TestimonialsProps {
 }
 
 export default function Testimonials({ testimonials }: TestimonialsProps) {
+  const visible = (testimonials || [])
+    .filter((t) => t.visibility !== false)
+    .sort((a, b) => (a.order || 0) - (b.order || 0));
+
   const [activeIndex, setActiveIndex] = useState(0);
   const [isInView, setIsInView] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
@@ -35,16 +39,16 @@ export default function Testimonials({ testimonials }: TestimonialsProps) {
   }, []);
 
   useEffect(() => {
-    if (!isInView || testimonials.length < 2) return;
+    if (!isInView || visible.length < 2) return;
 
     const interval = window.setInterval(() => {
-      setActiveIndex((currentIndex) => (currentIndex + 1) % testimonials.length);
+      setActiveIndex((currentIndex) => (currentIndex + 1) % visible.length);
     }, 4500);
 
     return () => window.clearInterval(interval);
-  }, [isInView, testimonials.length]);
+  }, [isInView, visible.length]);
 
-  if (testimonials.length === 0) return null;
+  if (visible.length === 0) return null;
 
   const selectTestimonial = (index: number) => {
     if (index === activeIndex) return;
@@ -63,23 +67,36 @@ export default function Testimonials({ testimonials }: TestimonialsProps) {
     if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
     event.preventDefault();
     const direction = event.key === "ArrowRight" ? 1 : -1;
-    const nextIndex = (index + direction + testimonials.length) % testimonials.length;
+    const nextIndex = (index + direction + visible.length) % visible.length;
     selectTestimonial(nextIndex);
     const nextButton = trackRef.current?.querySelector<HTMLButtonElement>(`[data-index="${nextIndex}"]`);
     nextButton?.focus();
   };
 
-  const activeTestimonial = testimonials[activeIndex];
+  const safeIndex = activeIndex < visible.length ? activeIndex : 0;
+  const activeTestimonial = visible[safeIndex];
 
   return (
-    <section ref={sectionRef} id="testimonials" aria-label="Testimonials" aria-labelledby="testimonials-heading" className="py-[var(--spacing-section-mobile)] md:py-[var(--spacing-section)]">
-      <p id="testimonials-heading" className="mb-[var(--spacing-8)] text-[length:var(--text-body-l)] font-[number:var(--font-weight-regular)] tracking-[0.08em] text-[var(--color-text-muted)] lowercase md:mb-[var(--spacing-9)]">
+    <section
+      ref={sectionRef}
+      id="testimonials"
+      aria-label="Testimonials"
+      aria-labelledby="testimonials-heading"
+      className="py-[var(--spacing-section-mobile)] md:py-[var(--spacing-section)]"
+    >
+      <p
+        id="testimonials-heading"
+        className="mb-[var(--spacing-8)] text-[length:var(--text-body-l)] font-[number:var(--font-weight-regular)] tracking-[0.08em] text-[var(--color-text-muted)] lowercase md:mb-[var(--spacing-9)]"
+      >
         nice things great persons said about me
       </p>
 
       <div className="flex flex-col items-center text-center">
         <div className="relative mb-[var(--spacing-6)] flex min-h-[var(--spacing-10)] w-full items-center justify-center md:min-h-[var(--spacing-9)]">
-          <blockquote className="mx-auto max-w-3xl text-[length:var(--text-quote)] font-[number:var(--font-weight-regular)] leading-[var(--text-quote--line-height)] tracking-[var(--tracking-tight-heading)] text-[var(--color-text-primary)] transition-[opacity,transform] duration-200 ease-out md:text-[length:var(--text-heading-h2)]" aria-live="polite">
+          <blockquote
+            className="mx-auto max-w-3xl text-[length:var(--text-quote)] font-[number:var(--font-weight-regular)] leading-[var(--text-quote--line-height)] tracking-[var(--tracking-tight-heading)] text-[var(--color-text-primary)] transition-[opacity,transform] duration-200 ease-out md:text-[length:var(--text-heading-h2)]"
+            aria-live="polite"
+          >
             &ldquo;{activeTestimonial.quote}&rdquo;
           </blockquote>
         </div>
@@ -89,13 +106,21 @@ export default function Testimonials({ testimonials }: TestimonialsProps) {
             {activeTestimonial.name}
           </span>
           <span className="text-[length:var(--text-label)] font-[number:var(--font-weight-medium)] tracking-[0.04em] text-[var(--color-text-muted)]">
-            {activeTestimonial.role} · {activeTestimonial.company}
+            {activeTestimonial.role}{activeTestimonial.company ? ` · ${activeTestimonial.company}` : ""}
           </span>
         </div>
 
         <div className="relative w-full max-w-xl px-[var(--spacing-4)]">
-          <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 left-0 z-10" style={{ width: "var(--spacing-8)", background: "linear-gradient(to right, var(--color-background-default), rgba(255,255,255,0))" }} />
-          <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 right-0 z-10" style={{ width: "var(--spacing-8)", background: "linear-gradient(to left, var(--color-background-default), rgba(255,255,255,0))" }} />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-y-0 left-0 z-10"
+            style={{ width: "var(--spacing-8)", background: "linear-gradient(to right, var(--color-background-default), rgba(255,255,255,0))" }}
+          />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-y-0 right-0 z-10"
+            style={{ width: "var(--spacing-8)", background: "linear-gradient(to left, var(--color-background-default), rgba(255,255,255,0))" }}
+          />
           <div
             ref={trackRef}
             role="tablist"
@@ -104,11 +129,11 @@ export default function Testimonials({ testimonials }: TestimonialsProps) {
             style={{ scrollSnapType: "x mandatory" }}
           >
             <div className="flex min-w-full items-center justify-center gap-[var(--spacing-4)]">
-              {testimonials.map((testimonial, index) => {
-                const isActive = index === activeIndex;
+              {visible.map((testimonial, index) => {
+                const isActive = index === safeIndex;
                 return (
                   <button
-                    key={`${testimonial.name}-${index}`}
+                    key={`${testimonial.name}-${testimonial.id || index}`}
                     data-index={index}
                     type="button"
                     role="tab"
@@ -116,11 +141,23 @@ export default function Testimonials({ testimonials }: TestimonialsProps) {
                     aria-label={`Show testimonial from ${testimonial.name}`}
                     onClick={() => selectTestimonial(index)}
                     onKeyDown={(event) => handleAvatarKeyDown(event, index)}
-                    className={`shrink-0 rounded-full outline-none transition-[opacity,transform,filter,box-shadow] duration-200 ease-out focus-visible:ring-2 focus-visible:ring-[var(--color-accent-primary)] focus-visible:ring-offset-2 ${isActive ? "scale-110 opacity-100 ring-2 ring-[var(--color-border-default)] ring-offset-2" : "scale-95 grayscale opacity-50 hover:scale-100 hover:opacity-75"}`}
+                    className={`shrink-0 rounded-full outline-none transition-[opacity,transform,filter,box-shadow] duration-200 ease-out focus-visible:ring-2 focus-visible:ring-[var(--color-accent-primary)] focus-visible:ring-offset-2 ${
+                      isActive
+                        ? "scale-110 opacity-100 ring-2 ring-[var(--color-border-default)] ring-offset-2"
+                        : "scale-95 grayscale opacity-50 hover:scale-100 hover:opacity-75"
+                    }`}
                     style={{ scrollSnapAlign: "center" }}
                   >
                     {testimonial.avatarUrl ? (
-                      <Image src={testimonial.avatarUrl} alt="" width={48} height={48} loading="lazy" unoptimized className="size-12 rounded-full object-cover" />
+                      <Image
+                        src={testimonial.avatarUrl}
+                        alt=""
+                        width={48}
+                        height={48}
+                        loading="lazy"
+                        unoptimized
+                        className="size-12 rounded-full object-cover"
+                      />
                     ) : (
                       <div className="size-12 rounded-full bg-[var(--color-neutral-200)] flex items-center justify-center font-medium text-xs text-[var(--color-text-primary)]">
                         {testimonial.name ? testimonial.name.charAt(0) : "?"}

@@ -6,6 +6,12 @@ interface FeaturedProjectsProps {
 }
 
 export default function FeaturedProjects({ projects }: FeaturedProjectsProps) {
+  const visibleProjects = (projects || [])
+    .filter((p) => p.visibility !== false)
+    .sort((a, b) => (a.order || 0) - (b.order || 0));
+
+  if (visibleProjects.length === 0) return null;
+
   return (
     <section
       id="featured-projects"
@@ -16,7 +22,7 @@ export default function FeaturedProjects({ projects }: FeaturedProjectsProps) {
         Featured Projects
       </h2>
       <div id="projects" className="scroll-mt-8 flex flex-col gap-[var(--spacing-4)]">
-        {projects.map((project, idx) => (
+        {visibleProjects.map((project, idx) => (
           <ProjectCard key={project.slug} project={project} index={idx} />
         ))}
       </div>

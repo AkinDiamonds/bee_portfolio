@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import Link from "next/link";
 import { ArrowUpRight, ChevronDownIcon, ArrowLeft, ExternalLink } from "lucide-react";
 import { SiGithub } from "react-icons/si";
 import type { ProjectDoc } from "@/lib/types";
@@ -54,8 +55,8 @@ export function ProjectCard({ project }: ProjectCardProps) {
               </p>
             </div>
 
-            {/* Borderless "View full details" Trigger */}
-            <div className="pt-2">
+            {/* Borderless "View full details" Trigger & Case study page link */}
+            <div className="pt-2 flex items-center gap-4 flex-wrap">
               <button
                 type="button"
                 onClick={() => setShowDetails(true)}
@@ -64,6 +65,13 @@ export function ProjectCard({ project }: ProjectCardProps) {
                 <span>View full details</span>
                 <ChevronDownIcon className="w-4 h-4 transition-transform duration-200 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
               </button>
+              <Link
+                href={`/projects/${project.slug}`}
+                className="inline-flex items-center gap-1 text-sm font-medium text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors"
+              >
+                <span>Case study</span>
+                <ArrowUpRight className="w-3.5 h-3.5" />
+              </Link>
             </div>
           </div>
         ) : (

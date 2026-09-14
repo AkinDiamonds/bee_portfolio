@@ -12,29 +12,71 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://simeonakinrinola.com";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(baseUrl),
   title: {
-    default: "TODO: Portfolio title",
-    template: "%s | TODO: Portfolio title",
+    default: "Simeon Akinrinola — Software Engineer & AI Architect",
+    template: "%s | Simeon Akinrinola",
   },
-  description: "TODO: Approved portfolio positioning statement.",
+  description:
+    "Portfolio and technical engineering notes of Simeon Akinrinola. Full-Stack and AI Systems Engineer specializing in Next.js, Distributed Systems, and Autonomous AI Agents.",
+  keywords: [
+    "Simeon Akinrinola",
+    "AkinDiamonds",
+    "Software Engineer",
+    "AI Engineer",
+    "AI Architect",
+    "Full Stack Developer",
+    "Next.js Developer",
+    "TypeScript",
+    "LLM Engineering",
+    "Autonomous Agents",
+    "Generative AI",
+  ],
+  authors: [{ name: "Simeon Akinrinola", url: baseUrl }],
+  creator: "Simeon Akinrinola",
+  publisher: "Simeon Akinrinola",
   robots: {
-    index: false,
-    follow: false,
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
   openGraph: {
     type: "website",
-    title: "TODO: Portfolio title",
-    description: "TODO: Approved portfolio positioning statement.",
+    locale: "en_US",
+    url: baseUrl,
+    siteName: "Simeon Akinrinola Portfolio",
+    title: "Simeon Akinrinola — Software Engineer & AI Architect",
+    description:
+      "Building better software, faster. Full-Stack and AI Systems Engineer specializing in Next.js, Distributed Systems, and Autonomous AI Agents.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "TODO: Portfolio title",
-    description: "TODO: Approved portfolio positioning statement.",
+    title: "Simeon Akinrinola — Software Engineer & AI Architect",
+    description:
+      "Building better software, faster. Full-Stack and AI Systems Engineer specializing in Next.js, Distributed Systems, and Autonomous AI Agents.",
+  },
+  alternates: {
+    canonical: baseUrl,
+    types: {
+      "text/markdown": `${baseUrl}/llms.txt`,
+    },
   },
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html
       lang="en"

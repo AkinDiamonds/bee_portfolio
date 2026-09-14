@@ -50,8 +50,37 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     },
   });
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://simeon.dev";
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    headline: post.title,
+    description: post.excerpt,
+    datePublished: post.publishedAt,
+    dateModified: post.updatedAt || post.publishedAt,
+    author: {
+      "@type": "Person",
+      name: profile?.heroName || "Simeon Akinrinola",
+      url: siteUrl,
+    },
+    publisher: {
+      "@type": "Person",
+      name: profile?.heroName || "Simeon Akinrinola",
+    },
+    articleSection: post.category,
+    keywords: post.category,
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `${siteUrl}/blog/${post.slug}`,
+    },
+  };
+
   return (
     <div className={styles.page}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Navbar profile={profile} />
       <main className={styles.main}>
         <Link href="/blog" className={styles.backLink}>← Back to blog</Link>

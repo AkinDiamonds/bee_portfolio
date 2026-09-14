@@ -1,6 +1,7 @@
 // src/components/hero/Hero.tsx
 import Link from "next/link";
 import type { SiteProfile } from "@/lib/types";
+import RevealSection from "@/components/motion/RevealSection";
 
 interface HeroProps {
   profile: SiteProfile | null;
@@ -12,17 +13,18 @@ export default function Hero({ profile }: HeroProps) {
   const subtitle = profile?.heroSubtitle || "Frontend, Backend, and AI Engineering.";
 
   return (
-    <section
-      id="hero"
-      aria-label="Hero Introduction"
-      className="relative min-h-[calc(100svh-var(--spacing-8))] flex flex-col justify-center items-center text-center px-[var(--spacing-5)] py-[var(--spacing-8)] overflow-hidden"
-    >
+    <RevealSection>
+      <section
+        id="hero"
+        aria-label="Hero Introduction"
+        className="relative min-h-[calc(100svh-var(--spacing-8))] flex flex-col justify-center items-center text-center px-[var(--spacing-5)] py-[var(--spacing-6)] overflow-hidden"
+      >
       <div className="max-w-4xl mx-auto flex flex-col items-center z-10">
         <span className="mb-[var(--spacing-5)] text-[length:var(--text-body-s)] font-[number:var(--font-weight-semibold)] text-[var(--color-text-secondary)] tracking-widest">
           {name}
         </span>
 
-        <h1 className="text-[length:var(--text-heading-h2)] md:text-[length:var(--text-display-l)] leading-[1.05] font-[number:var(--font-weight-semibold)] text-[var(--color-text-primary)] tracking-[var(--tracking-tight-display)] text-balance">
+        <h1 className="text-[length:var(--text-heading-h2)] md:text-[length:var(--text-display-xl)] leading-[1.05] font-[number:var(--font-weight-semibold)] text-[var(--color-text-primary)] tracking-[var(--tracking-tight-display)] text-balance">
           {tagline}
         </h1>
 
@@ -51,6 +53,7 @@ export default function Hero({ profile }: HeroProps) {
         aria-hidden="true"
         className="pointer-events-none absolute top-12 right-6 md:right-16 w-32 h-32 md:w-48 md:h-48"
       />
-    </section>
+      </section>
+    </RevealSection>
   );
 }

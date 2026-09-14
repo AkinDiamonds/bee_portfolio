@@ -32,10 +32,51 @@ test.describe('Cat Portfolio Agent', () => {
     await latestProject.click();
     await expect(input).toHaveValue("What is Simeon's latest project?");
 
-    await expect(modal.locator('button[aria-label="Send message"]')).toHaveCount(0);
+    await expect(modal.locator('button[aria-label="Send message"]')).toHaveCount(1);
 
     await page.keyboard.press('Escape');
     await expect(modal).toHaveCount(0);
+  });
+
+  test('can drag immediately after the first home-page load', async ({ page }) => {
+    await page.goto('/');
+
+    const agent = page.locator('aside[aria-label="Cat portfolio agent"]');
+    await expect(agent).toBeVisible();
+    const initialTransform = await agent.evaluate((element) => getComputedStyle(element).transform);
+    const bounds = await agent.boundingBox();
+    expect(bounds).not.toBeNull();
+
+    const centerX = bounds!.x + bounds!.width / 2;
+    const centerY = bounds!.y + bounds!.height / 2;
+    await page.mouse.move(centerX, centerY);
+    await page.mouse.down();
+    await page.mouse.move(centerX - 40, centerY - 40);
+    await page.mouse.up();
+
+    await expect.poll(() => agent.evaluate((element) => getComputedStyle(element).transform)).not.toBe(initialTransform);
+  });
+
+  test('moves the cat to the modal top center without covering its controls', async ({ page }) => {
+    await page.goto('/');
+
+    const agent = page.locator('aside[aria-label="Cat portfolio agent"]');
+    await agent.locator('div[role="button"]').click();
+
+    const modal = page.locator('div[role="dialog"]');
+    await expect(modal).toBeVisible();
+    await expect.poll(async () => {
+      const catBounds = await agent.boundingBox();
+      const modalBounds = await modal.boundingBox();
+      if (!catBounds || !modalBounds) return Number.POSITIVE_INFINITY;
+      return Math.abs(catBounds.x + catBounds.width / 2 - (modalBounds.x + modalBounds.width / 2));
+    }).toBeLessThan(2);
+
+    const catBounds = await agent.boundingBox();
+    const closeBounds = await modal.getByRole('button', { name: 'Close agent' }).boundingBox();
+    expect(catBounds).not.toBeNull();
+    expect(closeBounds).not.toBeNull();
+    expect(catBounds!.x + catBounds!.width).toBeLessThanOrEqual(closeBounds!.x);
   });
 
   test('keeps the global cat available when the footer is in view', async ({ page }) => {

@@ -38,8 +38,28 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     notFound();
   }
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://simeon.dev";
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: project.title,
+    description: project.summary || project.description,
+    applicationCategory: project.type || "DeveloperApplication",
+    author: {
+      "@type": "Person",
+      name: profile?.heroName || "Simeon Akinrinola",
+      url: siteUrl,
+    },
+    keywords: project.tags?.join(", "),
+    url: project.liveUrl || project.githubUrl || `${siteUrl}/projects/${project.slug}`,
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-[var(--color-background-default)] text-[var(--color-text-primary)]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Navbar profile={profile} />
 
       <main className="flex-1 max-w-[var(--container-portfolio)] w-full mx-auto px-[var(--spacing-5)] md:px-[var(--spacing-8)] py-[var(--spacing-8)] md:py-[var(--spacing-9)] flex flex-col gap-[var(--spacing-8)]">

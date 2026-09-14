@@ -1,20 +1,26 @@
 "use client";
 
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { motion } from "framer-motion";
+import { useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
+import { motion, useAnimationControls, useMotionValue } from "framer-motion";
 import CatRiveCanvas from "./CatRiveCanvas";
 import AgentChatModal from "./AgentChatModal";
 
 const emptySubscribe = () => () => {};
+type DragBounds = { top: number; right: number; bottom: number; left: number };
+type Position = { x: number; y: number };
 
 export default function PortfolioAgent() {
   const isMounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
   const [isChatOpen, setIsChatOpen] = useState(false);
-  const [dragBounds, setDragBounds] = useState({ top: 0, right: 0, bottom: 0, left: 0 });
+  const [dragBounds, setDragBounds] = useState<DragBounds | null>(null);
   const triggerRef = useRef<HTMLDivElement>(null);
   const wasDraggedRef = useRef(false);
+  const positionBeforeChatRef = useRef<Position>({ x: 0, y: 0 });
+  const controls = useAnimationControls();
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const updateDragBounds = () => {
       const element = triggerRef.current;
       if (!element) return;
@@ -30,9 +36,48 @@ export default function PortfolioAgent() {
     };
 
     updateDragBounds();
+    const element = triggerRef.current;
+    const observer = element ? new ResizeObserver(updateDragBounds) : null;
+    observer?.observe(document.documentElement);
     window.addEventListener("resize", updateDragBounds, { passive: true });
-    return () => window.removeEventListener("resize", updateDragBounds);
+    return () => {
+      observer?.disconnect();
+      window.removeEventListener("resize", updateDragBounds);
+    };
   }, []);
+
+  useLayoutEffect(() => {
+    if (!isChatOpen) {
+      controls.start({
+        x: positionBeforeChatRef.current.x,
+        y: positionBeforeChatRef.current.y,
+        transition: { duration: 0.32, ease: [0.2, 0, 0, 1] },
+      });
+      return;
+    }
+
+    positionBeforeChatRef.current = { x: x.get(), y: y.get() };
+    const frame = window.requestAnimationFrame(() => {
+      const cat = triggerRef.current;
+      const dialog = document.querySelector<HTMLElement>("[data-agent-dialog]");
+      if (!cat || !dialog) return;
+
+      const catBounds = cat.getBoundingClientRect();
+      const dialogBounds = dialog.getBoundingClientRect();
+      const targetCenterX = dialogBounds.left + dialogBounds.width / 2;
+      const targetTop = dialogBounds.top - catBounds.height / 2;
+      const deltaX = targetCenterX - (catBounds.left + catBounds.width / 2);
+      const deltaY = targetTop - catBounds.top;
+
+      controls.start({
+        x: positionBeforeChatRef.current.x + deltaX,
+        y: positionBeforeChatRef.current.y + deltaY,
+        transition: { duration: 0.32, ease: [0.2, 0, 0, 1] },
+      });
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [controls, isChatOpen, x, y]);
 
   if (!isMounted) return null;
 
@@ -46,8 +91,10 @@ export default function PortfolioAgent() {
       <motion.aside
         ref={triggerRef}
         aria-label="Cat portfolio agent"
-        drag={!isChatOpen}
-        dragConstraints={dragBounds}
+        style={{ x, y }}
+        animate={controls}
+        drag={Boolean(dragBounds) && !isChatOpen}
+        dragConstraints={dragBounds ?? undefined}
         dragMomentum={false}
         dragElastic={0}
         onDragStart={() => { wasDraggedRef.current = true; }}

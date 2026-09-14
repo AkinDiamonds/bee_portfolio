@@ -1,4 +1,5 @@
 import type { TechCategoryDoc } from "@/lib/types";
+import RevealSection from "@/components/motion/RevealSection";
 
 interface TechStackProps {
   techStack: TechCategoryDoc[];
@@ -10,11 +11,12 @@ export default function TechStack({ techStack }: TechStackProps) {
   const sortedGroups = [...techStack].sort((a, b) => (a.order || 0) - (b.order || 0));
 
   return (
-    <section
-      id="technologies"
-      aria-label="Technologies"
-      className="relative py-[var(--spacing-section-mobile)] md:py-[var(--spacing-section)] overflow-hidden"
-    >
+    <RevealSection>
+      <section
+        id="technologies"
+        aria-label="Technologies"
+        className="relative py-[var(--spacing-section-mobile)] md:py-[var(--spacing-section)] overflow-hidden"
+      >
       {/* Future WebGL / Canvas particle stage mount point */}
       <div
         id="canvas-particle-stage"
@@ -48,6 +50,7 @@ export default function TechStack({ techStack }: TechStackProps) {
           ))}
         </div>
       </div>
-    </section>
+      </section>
+    </RevealSection>
   );
 }

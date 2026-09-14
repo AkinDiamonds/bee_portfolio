@@ -1,6 +1,7 @@
 import React from "react";
 import type { ExperienceDoc } from "@/lib/types";
 import { formatExperiencePeriod } from "@/lib/firestore";
+import RevealSection from "@/components/motion/RevealSection";
 
 interface WorkExperienceProps {
   experience: ExperienceDoc[];
@@ -10,11 +11,12 @@ export default function WorkExperience({ experience }: WorkExperienceProps) {
   if (!experience || experience.length === 0) return null;
 
   return (
-    <section
-      id="experience"
-      aria-label="Work Experience"
-      className="py-[var(--spacing-section-mobile)] md:py-[var(--spacing-section)]"
-    >
+    <RevealSection>
+      <section
+        id="experience"
+        aria-label="Work Experience"
+        className="py-[var(--spacing-section-mobile)] md:py-[var(--spacing-section)]"
+      >
       <h2 className="text-[length:var(--text-heading-h3)] md:text-[length:var(--text-heading-h2)] font-[number:var(--font-weight-semibold)] text-[var(--color-text-primary)] tracking-[var(--tracking-tight-heading)] mb-[var(--spacing-6)] md:mb-[var(--spacing-8)] text-center">
         Work Experience
       </h2>
@@ -55,6 +57,7 @@ export default function WorkExperience({ experience }: WorkExperienceProps) {
           </li>
         ))}
       </ul>
-    </section>
+      </section>
+    </RevealSection>
   );
 }

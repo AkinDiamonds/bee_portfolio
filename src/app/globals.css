@@ -106,6 +106,7 @@
   --duration-base: 240ms;
   --duration-slow: 320ms;
   --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --section-reveal-distance: 1.5rem;
 
   --border-width-hairline: 1px;
 
@@ -176,17 +177,34 @@ html {
   scroll-padding-top: var(--spacing-8);
 }
 
+.section-reveal {
+  opacity: 0;
+  transform: translateY(var(--section-reveal-distance));
+  transition: opacity var(--duration-slow) var(--ease-standard),
+    transform var(--duration-slow) var(--ease-standard);
+}
+
+.section-reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
-    scroll-behavior: auto;
+    scroll-behavior: smooth;
   }
 
   *,
   *::before,
   *::after {
-    animation-duration: 1ms !important;
+    animation-duration: 700ms !important;
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
-    transition-duration: 1ms !important;
+    transition-duration: 700ms !important;
+  }
+
+  .section-reveal {
+    opacity: 1;
+    transform: none;
   }
 }

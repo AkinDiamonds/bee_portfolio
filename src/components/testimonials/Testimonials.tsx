@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import Image from "next/image";
 import type { TestimonialDoc } from "@/lib/types";
+import RevealSection from "@/components/motion/RevealSection";
 
 interface TestimonialsProps {
   testimonials: TestimonialDoc[];
@@ -77,13 +78,14 @@ export default function Testimonials({ testimonials }: TestimonialsProps) {
   const activeTestimonial = visible[safeIndex];
 
   return (
-    <section
-      ref={sectionRef}
-      id="testimonials"
-      aria-label="Testimonials"
-      aria-labelledby="testimonials-heading"
-      className="py-[var(--spacing-section-mobile)] md:py-[var(--spacing-section)]"
-    >
+    <RevealSection>
+      <section
+        ref={sectionRef}
+        id="testimonials"
+        aria-label="Testimonials"
+        aria-labelledby="testimonials-heading"
+        className="py-[var(--spacing-section-mobile)] md:py-[var(--spacing-section)]"
+      >
       <p
         id="testimonials-heading"
         className="mb-[var(--spacing-8)] text-[length:var(--text-body-l)] font-[number:var(--font-weight-regular)] tracking-[0.08em] text-[var(--color-text-muted)] lowercase md:mb-[var(--spacing-9)]"
@@ -170,6 +172,7 @@ export default function Testimonials({ testimonials }: TestimonialsProps) {
           </div>
         </div>
       </div>
-    </section>
+      </section>
+    </RevealSection>
   );
 }

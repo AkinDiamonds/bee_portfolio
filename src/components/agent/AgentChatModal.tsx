@@ -61,6 +61,7 @@ export default function AgentChatModal({ isOpen, onClose }: AgentChatModalProps)
         role="dialog"
         aria-modal="true"
         aria-label="Portfolio agent"
+        data-agent-dialog="true"
         className={styles.dialog}
         onMouseDown={(event) => event.stopPropagation()}
       >

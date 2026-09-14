@@ -4,6 +4,7 @@ import { useRef, useState, useEffect } from "react";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { BlogPostDoc } from "@/lib/types";
+import RevealSection from "@/components/motion/RevealSection";
 
 interface LatestBlogsProps {
   posts: BlogPostDoc[];
@@ -47,11 +48,12 @@ export default function LatestBlogs({ posts }: LatestBlogsProps) {
   if (visible.length === 0) return null;
 
   return (
-    <section
-      id="blog"
-      aria-label="Latest Blogs"
-      className="py-[var(--spacing-section-mobile)] md:py-[var(--spacing-section)]"
-    >
+    <RevealSection>
+      <section
+        id="blog"
+        aria-label="Latest Blogs"
+        className="py-[var(--spacing-section-mobile)] md:py-[var(--spacing-section)]"
+      >
       {/* Section Header */}
       <div className="flex items-center justify-between mb-[var(--spacing-6)] md:mb-[var(--spacing-8)]">
         <h2 className="text-[length:var(--text-heading-h3)] md:text-[length:var(--text-heading-h2)] font-[number:var(--font-weight-semibold)] text-[var(--color-text-primary)] tracking-[var(--tracking-tight-heading)]">
@@ -129,6 +131,7 @@ export default function LatestBlogs({ posts }: LatestBlogsProps) {
           <ChevronRight className="w-5 h-5" />
         </button>
       </div>
-    </section>
+      </section>
+    </RevealSection>
   );
 }

@@ -1,7 +1,7 @@
 .footer {
   position: relative;
   width: 100%;
-  overflow: hidden;
+  overflow-x: clip;
   margin-top: var(--spacing-section-mobile);
   border-top: var(--border-width-hairline) solid var(--color-border-default);
 }
@@ -58,6 +58,7 @@
   margin-block: var(--spacing-6);
   text-align: center;
   user-select: none;
+  pointer-events: none;
 }
 
 .wordmark {
@@ -69,14 +70,6 @@
   line-height: var(--text-footer-monolith--line-height);
   font-weight: var(--font-weight-bold);
   letter-spacing: var(--tracking-tight-display);
-}
-
-.landingPad {
-  position: relative;
-  display: inline-block;
-  min-inline-size: var(--spacing-7);
-  text-align: center;
-  line-height: inherit;
 }
 
 .period {

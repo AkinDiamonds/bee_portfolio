@@ -28,6 +28,8 @@ export default function CatRiveCanvas({
     },
   });
 
+
+
   // Track the cursor across the entire window and forward real normalized
   // coordinates into Rive's canvas pointer listeners so the cat's gaze
   // tracks the mouse anywhere on the screen.
@@ -36,22 +38,32 @@ export default function CatRiveCanvas({
     if (!container || !rive) return;
 
     const onPointerMove = (e: PointerEvent) => {
+      if (!e.isTrusted) return;
+
       const canvas = container.querySelector("canvas");
       if (!canvas) return;
 
-      // Dispatch genuine pointermove event targeted directly at the canvas
-      const syntheticEvent = new PointerEvent("pointermove", {
+      const pointerEvt = new PointerEvent("pointermove", {
         clientX: e.clientX,
         clientY: e.clientY,
         screenX: e.screenX,
         screenY: e.screenY,
-        bubbles: true,
-        cancelable: false,
+        bubbles: false,
+        cancelable: true,
         pointerId: e.pointerId || 1,
         pointerType: e.pointerType || "mouse",
       });
+      const mouseEvt = new MouseEvent("mousemove", {
+        clientX: e.clientX,
+        clientY: e.clientY,
+        screenX: e.screenX,
+        screenY: e.screenY,
+        bubbles: false,
+        cancelable: true,
+      });
 
-      canvas.dispatchEvent(syntheticEvent);
+      canvas.dispatchEvent(pointerEvt);
+      canvas.dispatchEvent(mouseEvt);
     };
 
     window.addEventListener("pointermove", onPointerMove, { passive: true });
@@ -74,10 +86,9 @@ export default function CatRiveCanvas({
         }
       }}
       className={`relative cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-neutral-900)] rounded-full transition-transform hover:scale-105 active:scale-95 ${className}`}
-      style={{ touchAction: "manipulation" }}
     >
-      <div className="w-full h-full pointer-events-auto">
-        <RiveComponent aria-hidden="true" className="w-full h-full" />
+      <div className="w-full h-full select-none">
+        <RiveComponent aria-hidden="true" className="w-full h-full pointer-events-auto" />
       </div>
     </div>
   );

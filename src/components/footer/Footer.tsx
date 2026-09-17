@@ -50,7 +50,7 @@ export default function Footer({ profile }: FooterProps) {
         </nav>
       </div>
 
-      <div id="bee-playground" className={styles.wordmarkStage}>
+      <div className={styles.wordmarkStage}>
         <span className={styles.srOnly}>{firstName}.</span>
         <span className={styles.wordmark} aria-hidden="true">
           <span>{firstName.toUpperCase()}</span>

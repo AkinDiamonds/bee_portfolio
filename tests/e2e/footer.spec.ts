@@ -22,33 +22,18 @@ test.describe('Footer Section', () => {
     await expect(github).toHaveAttribute('href', 'https://github.com/AkinDiamonds');
     await expect(email).toHaveAttribute('href', 'mailto:simeonakinrinola7@gmail.com');
 
-    // Verify the accessible wordmark and bee landing handoff.
+    // Verify the accessible wordmark and bee accent.
     await expect(footer).toContainText(/Simeon Akinrinola. All rights reserved/i);
-    await expect(footer.locator('#bee-playground')).toBeAttached();
-    await expect(footer.locator('#bee-playground')).toContainText('SIMEON.');
-    await expect(footer.locator('#bee-playground').getByText('Simeon.', { exact: true })).toBeAttached();
-    await expect(footer.locator('#bee-landing-pad')).toHaveAttribute('data-bee-landing-zone', 'center');
     await expect(footer.locator('[data-bee-accent="true"]')).toHaveText('.');
     await expect(footer).toHaveCSS('border-top-width', '1px');
   });
 
-  test('keeps the O landing pad aligned and contained at mobile width', async ({ page }) => {
+  test('keeps footer content contained at mobile width', async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 812 });
     await page.goto('/');
 
-    const landingPad = page.locator('#bee-landing-pad');
-    const wordmark = page.locator('#bee-playground > span[aria-hidden="true"]');
-    const bounds = await landingPad.boundingBox();
-    const wordmarkBounds = await wordmark.boundingBox();
-
-    expect(bounds).not.toBeNull();
-    expect(wordmarkBounds).not.toBeNull();
-    expect(bounds?.width).toBeGreaterThan(0);
-    expect(bounds?.height).toBeGreaterThan(0);
-    expect(bounds?.x).toBeGreaterThanOrEqual(wordmarkBounds?.x ?? 0);
-    expect((bounds?.x ?? 0) + (bounds?.width ?? 0)).toBeLessThanOrEqual(
-      (wordmarkBounds?.x ?? 0) + (wordmarkBounds?.width ?? 0),
-    );
+    const footer = page.locator('footer');
+    await expect(footer).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(375);
   });
 

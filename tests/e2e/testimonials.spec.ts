@@ -93,7 +93,7 @@ test.describe('Testimonials Section', () => {
     await expect.poll(getActiveLabel, { timeout: 6500 }).not.toBe(initialLabel);
 
     await page.evaluate(() => {
-      window.scrollTo(0, document.documentElement.scrollHeight);
+      window.scrollTo(0, 0);
     });
 
     const pausedLabel = await getActiveLabel();

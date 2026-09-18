@@ -88,7 +88,7 @@ export default function CatRiveCanvas({
       className={`relative cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-neutral-900)] rounded-full transition-transform hover:scale-105 active:scale-95 ${className}`}
     >
       <div className="w-full h-full select-none">
-        <RiveComponent aria-hidden="true" className="w-full h-full pointer-events-auto" />
+        <RiveComponent aria-hidden="true" className="w-full h-full pointer-events-none" />
       </div>
     </div>
   );

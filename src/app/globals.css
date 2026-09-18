@@ -153,7 +153,7 @@
 
   /* AGENT / CHAT */
   --size-agent-desktop: 8rem;    /* 128px */
-  --size-agent-mobile: 3.25rem;  /* ~52px */
+  --size-agent-mobile: 8rem;  /* ~52px */
   --size-agent-footer: 6rem;     /* 96px — sized to fit inside the O hollow */
   --size-agent-dialog: 28rem;
   --z-agent: 40;

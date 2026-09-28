@@ -9,17 +9,26 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const body = (await request.json()) as Partial<ProjectDoc> & { slug: string };
+  const body = (await request.json()) as Partial<ProjectDoc> & { slug: string; isNew?: boolean };
 
   if (!body.slug) {
     return NextResponse.json({ error: 'slug is required' }, { status: 400 });
   }
 
   const db = getAdminDb();
+
+  if (body.isNew) {
+    const existing = await db.collection('projects').doc(body.slug).get();
+    if (existing.exists) {
+      return NextResponse.json({ error: `A project with slug "${body.slug}" already exists.` }, { status: 409 });
+    }
+  }
+
+  const { ...docData } = body;
   await db
     .collection('projects')
     .doc(body.slug)
-    .set({ ...body, updatedAt: new Date().toISOString() }, { merge: true });
+    .set({ ...docData, updatedAt: new Date().toISOString() }, { merge: true });
 
   revalidatePath('/');
 

@@ -9,17 +9,26 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const body = (await request.json()) as BlogPostDoc;
+  const body = (await request.json()) as BlogPostDoc & { isNew?: boolean };
 
   if (!body.slug || !body.title || !body.body) {
     return NextResponse.json({ error: 'slug, title, and body are required' }, { status: 400 });
   }
 
   const db = getAdminDb();
+
+  if (body.isNew) {
+    const existing = await db.collection('posts').doc(body.slug).get();
+    if (existing.exists) {
+      return NextResponse.json({ error: `A blog post with slug "${body.slug}" already exists.` }, { status: 409 });
+    }
+  }
+
+  const { ...docData } = body;
   await db
     .collection('posts')
     .doc(body.slug)
-    .set({ ...body, updatedAt: new Date().toISOString() }, { merge: true });
+    .set({ ...docData, updatedAt: new Date().toISOString() }, { merge: true });
 
   revalidatePath('/');
   revalidatePath('/blog');

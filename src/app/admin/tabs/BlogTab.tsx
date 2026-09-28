@@ -16,6 +16,13 @@ const emptyPost: BlogPostDoc = {
   visibility: true,
 };
 
+const slugify = (text: string) =>
+  text
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
 export default function BlogTab() {
   const { authHeader } = useAdminAuth();
   const [posts, setPosts] = useState<BlogPostDoc[]>([]);
@@ -23,6 +30,11 @@ export default function BlogTab() {
   const [editingSlug, setEditingSlug] = useState<string | null>(null);
   const [formData, setFormData] = useState<BlogPostDoc>(emptyPost);
   const [status, setStatus] = useState("");
+
+  const isSlugDuplicate =
+    editingSlug === "NEW" &&
+    formData.slug.trim().length > 0 &&
+    posts.some((p) => p.slug.toLowerCase() === formData.slug.trim().toLowerCase());
 
   useEffect(() => {
     fetch("/api/admin/posts-read", { headers: { Authorization: authHeader } })
@@ -59,10 +71,16 @@ export default function BlogTab() {
       return;
     }
 
+    if (isSlugDuplicate) {
+      setStatus(`Cannot save: a blog post with slug "${formData.slug.trim()}" already exists.`);
+      return;
+    }
+
     setStatus("Saving post…");
-    const payload: BlogPostDoc = {
+    const payload: BlogPostDoc & { isNew?: boolean } = {
       ...formData,
       slug: formData.slug.trim(),
+      isNew: editingSlug === "NEW",
     };
 
     try {
@@ -180,23 +198,59 @@ export default function BlogTab() {
               <input
                 required
                 value={formData.title}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                onChange={(e) => {
+                  const newTitle = e.target.value;
+                  setFormData((prev) => ({
+                    ...prev,
+                    title: newTitle,
+                    slug: editingSlug === "NEW" ? slugify(newTitle) : prev.slug,
+                  }));
+                }}
                 placeholder="Building Scalable Systems"
                 className={inputClass}
               />
             </div>
             <div>
-              <label className="block text-[length:var(--text-label)] font-[number:var(--font-weight-medium)] text-[var(--color-text-secondary)] mb-1">
-                Slug (URL identifier) *
-              </label>
+              <div className="flex items-center justify-between mb-1">
+                <label className="block text-[length:var(--text-label)] font-[number:var(--font-weight-medium)] text-[var(--color-text-secondary)]">
+                  Slug (URL identifier) *
+                </label>
+                {editingSlug === "NEW" && formData.slug.trim() && (
+                  <span
+                    className={`text-[11px] font-[number:var(--font-weight-medium)] px-2 py-0.5 rounded-full ${
+                      isSlugDuplicate
+                        ? "bg-red-500/10 text-red-600 border border-red-500/20"
+                        : "bg-emerald-500/10 text-emerald-600 border border-emerald-500/20"
+                    }`}
+                  >
+                    {isSlugDuplicate ? "Already taken" : "Available"}
+                  </span>
+                )}
+              </div>
               <input
                 required
-                disabled={editingSlug !== "NEW"}
+                readOnly
                 value={formData.slug}
-                onChange={(e) => setFormData({ ...formData, slug: e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") })}
-                placeholder="building-scalable-systems"
-                className={`${inputClass} disabled:opacity-50`}
+                placeholder="Auto-generated from title"
+                className={`${inputClass} bg-[var(--color-neutral-100)] text-[var(--color-text-secondary)] cursor-not-allowed ${
+                  editingSlug === "NEW" && formData.slug.trim()
+                    ? isSlugDuplicate
+                      ? "border-red-500 focus:ring-red-400"
+                      : "border-emerald-500 focus:ring-emerald-400"
+                    : ""
+                }`}
               />
+              {editingSlug === "NEW" && formData.slug.trim() && (
+                <p
+                  className={`mt-1 text-[length:var(--text-caption)] ${
+                    isSlugDuplicate ? "text-red-500" : "text-emerald-600"
+                  }`}
+                >
+                  {isSlugDuplicate
+                    ? `A blog post with slug "${formData.slug}" already exists. Change the title to get a unique URL.`
+                    : `URL will be: /blog/${formData.slug}`}
+                </p>
+              )}
             </div>
           </div>
 

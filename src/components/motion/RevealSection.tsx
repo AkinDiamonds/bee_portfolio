@@ -16,7 +16,9 @@ export default function RevealSection({ children, className = "" }: RevealSectio
     if (!element) return;
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setIsVisible(true);
+      requestAnimationFrame(() => {
+        setIsVisible(true);
+      });
       return;
     }
 

@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
-import { getAdminBucket, getAdminDb } from '@/lib/firebase-admin';
+import { promises as fs } from 'fs';
+import path from 'path';
+import { getAdminDb } from '@/lib/firebase-admin';
 import { checkBasicAuth } from '../auth';
 
 export async function POST(request: Request) {
@@ -23,17 +25,67 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'File exceeds 10 MB limit' }, { status: 400 });
   }
 
-  const buffer = Buffer.from(await file.arrayBuffer());
-  const bucket = getAdminBucket();
-  const storageFile = bucket.file('resume/resume.pdf');
-  await storageFile.save(buffer, { contentType: 'application/pdf' });
-  await storageFile.makePublic();
+  try {
+    const buffer = Buffer.from(await file.arrayBuffer());
+    const publicDir = path.join(process.cwd(), 'public');
+    const uploadDir = path.join(publicDir, 'uploads');
 
-  const publicUrl = `https://storage.googleapis.com/${bucket.name}/resume/resume.pdf`;
+    // Ensure uploads directory exists
+    await fs.mkdir(uploadDir, { recursive: true });
 
-  // Also update the resumeUrl field in site/profile
-  const db = getAdminDb();
-  await db.collection('site').doc('profile').set({ resumeUrl: publicUrl, updatedAt: new Date().toISOString() }, { merge: true });
+    // Read previous resume URL from profile if available
+    let oldResumeUrl: string | undefined;
+    try {
+      const db = getAdminDb();
+      const profileDoc = await db.collection('site').doc('profile').get();
+      if (profileDoc.exists) {
+        oldResumeUrl = profileDoc.data()?.resumeUrl;
+      }
+    } catch (e) {
+      console.warn('Could not read existing profile doc:', e);
+    }
 
-  return NextResponse.json({ url: publicUrl });
+    // Save the new resume file with timestamp to prevent caching issues
+    const filename = `resume-${Date.now()}.pdf`;
+    const newFilePath = path.join(uploadDir, filename);
+    await fs.writeFile(newFilePath, buffer);
+
+    // Also overwrite public/resume.pdf so standard /resume.pdf links always resolve
+    const defaultResumePath = path.join(publicDir, 'resume.pdf');
+    await fs.writeFile(defaultResumePath, buffer);
+
+    const publicUrl = `/uploads/${filename}`;
+
+    // Clean up previous uploaded resume in public/uploads if it's different
+    if (oldResumeUrl && oldResumeUrl.startsWith('/uploads/')) {
+      const oldFilename = path.basename(oldResumeUrl);
+      if (oldFilename !== filename) {
+        const oldFilePath = path.join(uploadDir, oldFilename);
+        try {
+          await fs.unlink(oldFilePath);
+        } catch {
+          // Ignore if previous file doesn't exist
+        }
+      }
+    }
+
+    // Update the resumeUrl field in site/profile
+    try {
+      const db = getAdminDb();
+      await db.collection('site').doc('profile').set(
+        { resumeUrl: publicUrl, updatedAt: new Date().toISOString() },
+        { merge: true }
+      );
+    } catch (dbErr) {
+      console.warn('Could not update Firestore profile:', dbErr);
+    }
+
+    return NextResponse.json({ url: publicUrl });
+  } catch (err) {
+    console.error('Error saving resume to repo:', err);
+    return NextResponse.json(
+      { error: err instanceof Error ? err.message : 'Failed to save resume' },
+      { status: 500 }
+    );
+  }
 }

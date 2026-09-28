@@ -2,6 +2,8 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
+import beeIcon from "@/app/icon.svg";
 import { ChevronDown, ExternalLink, Download, Copy, Check } from "lucide-react";
 import type { SiteProfile } from "@/lib/types";
 
@@ -92,10 +94,16 @@ export default function Navbar({ profile }: NavbarProps) {
         <Link
           href="/"
           onClick={() => setMobileMenuOpen(false)}
-          className="text-[16px] font-[number:var(--font-weight-bold)] text-[var(--color-text-primary)] tracking-[var(--tracking-tight-heading)] rounded-[var(--radius-sm)] transition-opacity hover:opacity-80 z-50"
+          className="flex items-center rounded-[var(--radius-sm)] transition-opacity hover:opacity-80 z-50"
           aria-label="Home"
         >
-          {firstName} <span className="font-normal opacity-80">{lastName}</span>
+          <Image
+            src={beeIcon}
+            alt="Simeon Akinrinola logo"
+            height={24}
+            className="h-6 w-auto"
+            priority
+          />
         </Link>
 
         {/* Desktop Nav */}

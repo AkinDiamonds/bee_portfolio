@@ -17,7 +17,7 @@ const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://simeonakinrinola.co
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: {
-    default: "Simeon Akinrinola — Software Engineer & AI Architect",
+    default: "Simeon Akinrinola's Portfolio",
     template: "%s | Simeon Akinrinola",
   },
   description:
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     "AI Engineer",
     "AI Architect",
     "Full Stack Developer",
-    "Next.js Developer",
+    "Node.js Developer",
     "TypeScript",
     "LLM Engineering",
     "Autonomous Agents",

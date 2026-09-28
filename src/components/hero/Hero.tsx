@@ -20,7 +20,7 @@ export default function Hero({ profile }: HeroProps) {
         className="relative min-h-[calc(100svh-var(--spacing-8))] flex flex-col justify-center items-center text-center px-[var(--spacing-5)] py-[var(--spacing-6)] overflow-hidden"
       >
       <div className="max-w-4xl mx-auto flex flex-col items-center z-10">
-        <span className="mb-[var(--spacing-5)] text-[length:var(--text-body-s)] font-[number:var(--font-weight-semibold)] text-[var(--color-text-secondary)] tracking-widest">
+        <span className="mb-[var(--spacing-5)] text-[length:var(--text-body-l)] font-[number:var(--font-weight-semibold)] text-[var(--color-text-secondary)] tracking-widest">
           {name}
         </span>
 

@@ -96,7 +96,7 @@ export default function Testimonials({ testimonials }: TestimonialsProps) {
       <div className="flex flex-col items-center text-center">
         <div className="relative mb-[var(--spacing-6)] flex min-h-[var(--spacing-10)] w-full items-center justify-center md:min-h-[var(--spacing-9)]">
           <blockquote
-            className="mx-auto max-w-3xl text-[length:var(--text-quote)] font-[number:var(--font-weight-regular)] leading-[var(--text-quote--line-height)] tracking-[var(--tracking-tight-heading)] text-[var(--color-text-primary)] transition-[opacity,transform] duration-200 ease-out md:text-[length:var(--text-heading-h2)]"
+            className="mx-auto max-w-3xl text-[length:var(--text-quote)] font-[number:var(--font-weight-regular)] leading-[var(--text-quote--line-height)] tracking-[var(--tracking-tight-heading)] text-[var(--color-text-primary)] transition-[opacity,transform] duration-500 ease-out md:text-[length:var(--text-heading-h2)]"
             aria-live="polite"
           >
             &ldquo;{activeTestimonial.quote}&rdquo;

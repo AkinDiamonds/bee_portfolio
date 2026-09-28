@@ -374,12 +374,12 @@ export default function ProjectsForm({ initial }: ProjectsFormProps) {
               <input
                 ref={fileRef}
                 type="file"
-                accept="image/*,video/mp4,video/webm"
+                accept="image/*,video/mp4,video/webm,video/quicktime"
                 className="hidden"
                 onChange={handleMediaUpload}
               />
               <span className="text-[length:var(--text-caption)] text-[var(--color-text-muted)]">
-                Accepts MP4/WebM or PNG/JPG (max 50MB)
+                Accepts MP4/WebM or PNG/JPG (max 100MB)
               </span>
             </div>
           </div>

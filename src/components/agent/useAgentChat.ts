@@ -34,6 +34,15 @@ export function useAgentChat() {
     setAgentStatus(CAT_LOADING_MESSAGES[randomIndex]);
   }, []);
 
+  const resetChat = useCallback(() => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    setMessages([]);
+    setIsGenerating(false);
+    setAgentStatus(null);
+  }, []);
+
   const sendMessage = useCallback(async (content: string) => {
     const trimmed = content.trim();
     if (!trimmed || isGenerating) return;
@@ -148,5 +157,6 @@ export function useAgentChat() {
     isGenerating,
     agentStatus,
     sendMessage,
+    resetChat,
   };
 }

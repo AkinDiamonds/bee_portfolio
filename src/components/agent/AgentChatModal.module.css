@@ -92,6 +92,93 @@
   white-space: nowrap;
 }
 
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title {
+  font-size: var(--text-body-m);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.messageThread {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+  overflow-y: auto;
+  max-height: 40vh;
+  padding-right: var(--spacing-2);
+  scrollbar-width: thin;
+}
+
+.messageBubble {
+  padding: var(--spacing-3) var(--spacing-4);
+  border-radius: var(--radius-md);
+  font-size: var(--text-body-s);
+  line-height: var(--text-body-s--line-height);
+  max-width: 85%;
+  word-wrap: break-word;
+}
+
+.messageUser {
+  align-self: flex-end;
+  background-color: var(--color-action-primary);
+  color: var(--color-action-secondary);
+  border-bottom-right-radius: var(--radius-sm);
+}
+
+.messageAssistant {
+  align-self: flex-start;
+  background-color: var(--color-background-subtle);
+  color: var(--color-text-primary);
+  border-bottom-left-radius: var(--radius-sm);
+}
+
+.markdown p {
+  margin: 0;
+}
+
+.markdown p + p {
+  margin-top: var(--spacing-2);
+}
+
+.markdown a {
+  color: var(--color-accent-primary);
+  text-decoration: underline;
+}
+
+.markdown code {
+  font-family: monospace;
+  background-color: var(--color-neutral-200);
+  padding: 0.1em 0.3em;
+  border-radius: var(--radius-sm);
+}
+
+.messageLoading {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+.loadingPulse {
+  width: var(--spacing-2);
+  height: var(--spacing-2);
+  background-color: var(--color-text-muted);
+  border-radius: 50%;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
 @media (min-width: 40rem) {
   .dialog {
     right: var(--spacing-6);

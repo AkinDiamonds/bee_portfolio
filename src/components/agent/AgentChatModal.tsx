@@ -13,7 +13,7 @@ interface AgentChatModalProps {
 
 const STARTER_PROMPTS = [
   "What is Simeon's latest project?",
-  "Leave this message for Simeon from me",
+  "List out Simeon's Python projects",
   "Why should I hire Simeon for my project?",
 ];
 
@@ -71,7 +71,7 @@ export default function AgentChatModal({ isOpen, onClose }: AgentChatModalProps)
         onMouseDown={(e) => e.stopPropagation()}
       >
         <div className={styles.header}>
-          <h2 className={styles.title}>Chat with my Agent</h2>
+          <h2 className={styles.title}>Live access to Simeon's Github, ask me anything!</h2>
           <div className={styles.headerActions}>
             {messages.length > 0 && (
               <button
@@ -91,32 +91,7 @@ export default function AgentChatModal({ isOpen, onClose }: AgentChatModalProps)
           </div>
         </div>
 
-        {showConfirmReset && (
-          <div className={styles.confirmBanner} role="alert">
-            <p className={styles.confirmMessage}>
-              Start a new conversation? Your current chat history will be lost.
-            </p>
-            <div className={styles.confirmActions}>
-              <button
-                type="button"
-                className={styles.confirmButtonCancel}
-                onClick={() => setShowConfirmReset(false)}
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                className={styles.confirmButtonConfirm}
-                onClick={() => {
-                  resetChat();
-                  setShowConfirmReset(false);
-                }}
-              >
-                Start new
-              </button>
-            </div>
-          </div>
-        )}
+        
 
         {messages.length === 0 ? (
           <div className={styles.prompts} aria-label="Suggested prompts">
@@ -133,7 +108,32 @@ export default function AgentChatModal({ isOpen, onClose }: AgentChatModalProps)
             messagesEndRef={messagesEndRef}
           />
         )}
-
+    {showConfirmReset && (
+              <div className={styles.confirmBanner} role="alert">
+                <p className={styles.confirmMessage}>
+                  Start a new conversation? Your current chat history will be lost forever.
+                </p>
+                <div className={styles.confirmActions}>
+                  <button
+                    type="button"
+                    className={styles.confirmButtonCancel}
+                    onClick={() => setShowConfirmReset(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    className={styles.confirmButtonConfirm}
+                    onClick={() => {
+                      resetChat();
+                      setShowConfirmReset(false);
+                    }}
+                  >
+                    Start new
+                  </button>
+                </div>
+              </div>
+            )}
         <form
           className={styles.form}
           onSubmit={(e) => {
@@ -149,7 +149,7 @@ export default function AgentChatModal({ isOpen, onClose }: AgentChatModalProps)
             id="agent-message"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            placeholder={isGenerating ? "Agent is typing..." : "Write a message"}
+            placeholder={isGenerating ? "" : "Write a message"}
             autoComplete="off"
             disabled={isGenerating}
           />

@@ -29,26 +29,45 @@ export default function PortfolioAgent() {
       return;
     }
 
-    const frame = window.requestAnimationFrame(() => {
-      const cat = triggerRef.current;
-      const dialog = document.querySelector<HTMLElement>("[data-agent-dialog]");
-      if (!cat || !dialog) return;
+    const cat = triggerRef.current;
+    const dialog = document.querySelector<HTMLElement>("[data-agent-dialog]");
+    if (!cat || !dialog) return;
 
-      const catBounds = cat.getBoundingClientRect();
-      const dialogBounds = dialog.getBoundingClientRect();
-      const targetCenterX = dialogBounds.left + dialogBounds.width / 2;
-      const targetTop = dialogBounds.top - catBounds.height / 2;
-      const deltaX = targetCenterX - (catBounds.left + catBounds.width / 2);
-      const deltaY = targetTop - catBounds.top;
+    let isFirstPositioning = true;
+
+    const updatePosition = () => {
+      const dialogWidth = dialog.offsetWidth;
+      const dialogHeight = dialog.offsetHeight;
+      const catWidth = cat.offsetWidth;
+      const catHeight = cat.offsetHeight;
+
+      const deltaX = -(dialogWidth / 2) + (catWidth / 2);
+      const deltaY = -dialogHeight + (catHeight / 2);
 
       controls.start({
         x: deltaX,
         y: deltaY,
-        transition: { duration: 0.32, ease: [0.2, 0, 0, 1] },
+        transition: isFirstPositioning
+          ? { duration: 0.32, ease: [0.2, 0, 0, 1] }
+          : { duration: 0.1, ease: "easeOut" },
       });
+
+      isFirstPositioning = false;
+    };
+
+    updatePosition();
+
+    const resizeObserver = new ResizeObserver(() => {
+      updatePosition();
     });
 
-    return () => window.cancelAnimationFrame(frame);
+    resizeObserver.observe(dialog);
+    window.addEventListener("resize", updatePosition);
+
+    return () => {
+      resizeObserver.disconnect();
+      window.removeEventListener("resize", updatePosition);
+    };
   }, [controls, isChatOpen]);
 
   if (!isMounted) return null;

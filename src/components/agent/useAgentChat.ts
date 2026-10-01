@@ -21,7 +21,7 @@ const CAT_LOADING_MESSAGES = [
   "meowing...",
 ];
 
-const CAT_ERROR_MESSAGE = "Meow! Something went wrong on my end. I'm probably just taking a nap. Try again later!";
+const CAT_ERROR_MESSAGE = "Something went wrong on my end. I'm probably just taking a nap. Try again later!";
 
 export function useAgentChat() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
